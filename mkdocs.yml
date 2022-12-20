@@ -1,0 +1,70 @@
+site_name: pypackaging-native
+repo_url: https://github.com/pypackaging-native/pypackaging-native
+copyright: Copyright &copy; 2022 Quansight Labs & open source contributors
+
+theme:
+  name: material
+  features:
+    - header.autohide
+      #    - navigation.tabs
+      #    - navigation.tabs.sticky
+  palette:
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: blue grey
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: blue grey
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+nav:
+  - 'index.md'
+  - 'Meta topics':
+    - 'meta-topics/build_steps_conceptual.md'
+    - 'meta-topics/purposes_of_pypi.md'
+    - 'meta-topics/pypi_social_model.md'
+    - 'meta-topics/no_build_farm.md'
+    - 'meta-topics/user_expectations_wheels.md'
+  - 'Key issues':
+    - 'Native dependencies':
+      - 'key-issues/native-dependencies/index.md'
+      - 'key-issues/native-dependencies/blas_openmp.md'
+      - 'key-issues/native-dependencies/geospatial_stack.md'
+      - 'key-issues/native-dependencies/cpp_deps.md'
+    - 'key-issues/abi.md'
+    - 'key-issues/gpus.md'
+    - 'key-issues/pypi_metadata_handling.md'
+    - 'key-issues/simd_support.md'
+    - 'key-issues/unexpected_fromsource_builds.md'
+  - 'other_issues.md'
+  - 'references.md'
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+# - git-authors
+# - git-committers:
+#     repository: rgommers/pypi-painpoints
+#     token: !ENV GH_TOKEN
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/pypackaging-native/pypackaging-native
+    - icon: material/license
+      link: https://github.com/pypackaging-native/pypackaging-native/blob/main/LICENSE
