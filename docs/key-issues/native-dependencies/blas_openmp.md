@@ -158,6 +158,11 @@ a second vendored OpenMP library in addition to two BLAS/LAPACK libraries.
     an implicit dependency and hence build results get affected by another
     package pulling in an OpenMP library: 
     [pytorch#18398](https://github.com/pytorch/pytorch/issues/18398).
+
+    *Note: there is an active discussion
+    ([cpython#84559](https://github.com/python/cpython/issues/84559),
+    [Discourse thread](https://discuss.python.org/t/switching-default-multiprocessing-context-to-spawn-on-posix-as-well/21868) - Dec'22)
+    to change the default `multiprocessing` context away from `'fork'`.*
     
 
 System package managers usually have a way of dealing with multiple
@@ -225,12 +230,13 @@ TODO
 - A mitigation to not make things worse: stay with the status quo, do not use
   more OpenMP. Not a very satisfactory one though.
 - Build wheels for OpenBLAS and perhaps also OpenMP and maintain those on PyPI.
-  Issue: who takes responsibility for these, and decides on changes over time
-  (possibly breaking ones)?
 
-  - See this gradual evolution plan discussed between scikit-learn and SciPy
-    maintainers:
-    https://github.com/scipy/scipy/issues/15050#issuecomment-975318631
+    - Issue: who takes responsibility for these, and decides on changes over
+      time (possibly breaking ones)?
+
+    - See this gradual evolution plan discussed between scikit-learn and SciPy
+      maintainers:
+      [scipy#15050](https://github.com/scipy/scipy/issues/15050#issuecomment-975318631)
 
 - Larger changes to PyPI/wheels to get to parity with system package managers.
   This will require dealing with several "meta topics", like
