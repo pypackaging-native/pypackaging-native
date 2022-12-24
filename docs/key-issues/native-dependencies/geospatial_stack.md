@@ -20,8 +20,23 @@ installing from PyPI.
 
 ## Current state
 
+The foundation for all of the Python geospatial packages are a set of native
+libraries, in particular [GDAL](https://gdal.org/) (C/C++),
+[PROJ](https://proj.org/index.html) (C++),
+[libspatialindex](https://github.com/libspatialindex/libspatialindex) (C++), and
+[libtiff](https://gitlab.com/libtiff/libtiff) (C).
 
-This is the warning displayed in the Geopandas documentation
+These libraries are difficult to build, GDAL in particular (it has a
+[long list of other native dependencies](https://gdal.org/development/building_from_source.html),
+some mandatory and some optional). When there are multiple fundamental
+C/C++-only libraries *and* multiple consumers of those libraries, there is a
+problem. The PyPI/wheels design requires that each Python package rebuilds all
+those C libraries and vendors them. This is (a) a hard job for any individual
+package author, (b) requires coordination in order not to end up with different
+versions of vendored libraries, and (c) a big enough hurdle in practice that
+Python package authors have not been able to solve the problems.
+
+To illustrate that, this is the warning displayed in the Geopandas documentations
 ([v0.12.2 install page](https://geopandas.org/en/v0.12.2/getting_started/install.html))
 for installing with `pip`:
 
@@ -254,6 +269,12 @@ themselves.
 
 ## Problems
 
+- The whole geospatial stack is effectively not usable from PyPI, and most
+  projects and domain-specific user guides recommend using Conda.
+- Multiple native libraries as a foundation requires coordination and shared
+  build infrastructure.
+- As a specific domain, geospatial projects have less energy/people available
+  to solve problems compared to the largest projects in the PyData space.
 
 
 ## History
@@ -272,3 +293,7 @@ The current state - the geospatial stack being almost uninstallable from PyPI,
 and projects and users mostly using conda-forge - is hard to improve upon
 unless some of the meta issues with PyPI that are the root causes of that
 current state get addressed.
+
+The most effective direction forward is probably to acknowledge that this use
+case is too difficult for PyPI, and to improve the interoperability between
+PyPI/Pip and system package managers.
