@@ -1,3 +1,13 @@
+> What does this have to do with Python?
+>
+> Python as a glue language is essentially exposed to the sum of all problems
+> that other languages have with their binary distribution, and this is a really
+> vast field (even just for C/C++).
+>
+> Needless to say, adequately summarizing decades of work and developments that
+> have lead us to where we are now is not easy. If you find errors or things to
+> improve, please open an issue or PR!
+
 # Basic Code Compilation Concepts
 
 In order to get a computer to execute a given unit of work (say, application `X`
