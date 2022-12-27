@@ -7,7 +7,7 @@ in discussions about the evolution of those standards.
 This is broadly because, in a world where everything always gets recompiled from
 scratch (essentially the purview of those standards), ABI would be irrelevant.
 However, reality has shown that the always-recompile model is not practicable
-in the vast majority of contexts, and binary artefacts need to be distributed.
+in the vast majority of contexts, and binary artifacts need to be distributed.
 
 As soon as this is attempted, we run into all the many potential problems that
 can appear at the interface between source code and the actual physical
@@ -46,13 +46,22 @@ call    f
 Here we now need two registers -- `edi` and `esi`. Assuming the author of
 `libfoo` (that contains `f`) wants to upgrade to wider integers because their
 users are asking for that, and we upgrade the shared library our code is linked
-against _without_ recompilation, the our code (which expected `long long`) would
-only set up the `edi` register correctly, but the symbol for `f` would use both
-`edi` and `esi`.
+against _without_ recompilation, then our code (which expected `long long`)
+would only set up the `edi` register correctly, but the symbol for `f` would
+use both `edi` and `esi`.
 
 If we're "lucky", this only leads to a crash, but it might lead to pretty much
 arbitrary behavior based on whatever happens to be in `esi`, in a way that's
 extremely hard to debug.
+
+This is but a trivial example, there are innumerable ways for libraries you
+rely on to break their ABI, including:
+- Changing anything about a function signature
+- Changing (almost) anything about templating (C++)
+- Adding a data member or virtual functions to a class
+- Making something inline that previously wasn’t
+- Changing your compiler or any of many relevant compilation flags
+- Etc.
 
 ## Interaction With Shared Libraries
 
@@ -65,13 +74,14 @@ ensure that all their packages are compiled consistently against a given version
 of glibc (and other libraries like the C++ standard library).
 
 Similarly, this is why distributions only upgrade their glibc across major
-releases, because doing so for an LTS release would risk too much breakage.
+releases, because doing so for an LTS release would risk too much breakage,
+even though glibc takes extreme care about remaining backwards compatible.
 
 ## The Different Levels of ABI Breaks
 
 Fundamentally, ABI can break at pretty much any point that's involved in the
 computation of our program. For the sake of clarity, let us divide these into
-four different levels:
+three different levels:
 1. ABI breaks in third-party libraries
 1. ABI breaks in compiler or due to compiler configuration
 1. ABI breaks in the language standard
@@ -90,12 +100,12 @@ C++ code compiled with GCC against older C++ standards needed to be recompiled.
 Due to the timelines involved with LTS distributions like RHEL, this took a long
 time to percolate through the ecosystem.
 
-This has led to extreme reluctance in the C & C++ committees to change anything
-that even remotely touches the ABI, even though there are often substantial
-improvements left on the table due to this (famously, `std::regex` is extremely
-slow and cannot be fixed without breaking ABI). This leads to extreme scrutiny
-(and therefore slowness) in standards development, which has its own downsides
-(see section about abseil below).
+Episodes like these have led to extreme reluctance in the C & C++ committees to
+change anything that even remotely touches the ABI, even though there are often
+substantial improvements left on the table due to this (famously, `std::regex`
+is excruciatingly slow and cannot be fixed without breaking ABI). This leads to
+extreme scrutiny (and therefore sluggish pace) in standards development, which
+has its own knock-on effects (see section about abseil below).
 
 This is also the reason why there are no larger integer types (e.g. `int128`)
 that are officially supported by the standard, because their introduction would
@@ -110,9 +120,9 @@ above.
     written by the current editor of the C language, as well as a prolific
     proposal author for both C & C++.
 
-
 Finally, the unrealized performance gains left on the table due to ABI
-stability were what led Google to push hard for an ABI break in the C++
+stability (and millions of dollar cost of single percentage performance
+pessimization) were what led Google to push hard for an ABI break in the C++
 committee, and their [defeat](https://cor3ntin.github.io/posts/abi/) at the
 C++ meeting in Prague is ultimately what led to them withdrawing their
 substantial resources from compiler development (principally clang), and
@@ -122,7 +132,7 @@ start their own C++-alike language, [Carbon](https://github.com/carbon-language/
 
 For completeness, we need to distinguish that here we are not talking about
 ABI breaks in the compiler infrastructure (in many ways, compilers are less
-exposed because they using them -- i.e. recompiling -- drastically lessens the
+exposed because using them -- i.e. recompiling -- drastically lessens the
 exposure to ABI), but rather of ABI breaks in the artifacts produced by them.
 
 Generally, compiler authors are almost as reluctant to break ABI as the language
@@ -164,9 +174,9 @@ process due to ABI concerns above).
 
 One prominent example of such usage is `absl::string_view`, which backports the
 C++17 `std::string_view` back to C++11 & C++14 (this feature allows to heavily
-cut down on useless copies involving strings, which has a strong performance
-impact). However, these backports are generally not ABI-compatible with the
-implementations for later standard versions.
+cut down on useless copies involving strings, which has a substantial
+performance impact). However, these backports are generally not ABI-compatible
+with the implementations for later standard versions.
 
 This puts abseil in the curious position that the C++ standard version used to
 compile it has an impact on its ABI. This is because abseil -- by default --

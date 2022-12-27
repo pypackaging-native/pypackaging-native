@@ -81,14 +81,14 @@ int square(T num) {
 allows us to call `square` with all kinds of integer, floats, etc. The compiler
 will keep track of which flavor of the function has been used in the program
 and generate the respective symbols for each one of them. In order to
-distinguish these symbols, the get names that look like gibberish, but really
-bakes the types of their input arguments into the identifier, so that we can
-ensure the right symbol gets called when we actually execute the function.
+distinguish these symbols, they get names that look like gibberish, but really
+simply bake the types of their input arguments into the identifier, so that we
+can ensure the right symbol gets called when we actually execute the function.
 For more details about the most widespread convention about this, see [here](https://github.com/itanium-cxx-abi/cxx-abi).
 
 ### Linkers
 
-When building and executable or a library, any code that references functions
+When building an executable or a library, any code that references functions
 from third-party libraries needs to be resolved to the respective symbols, and
 those need to be found and copied into the executable, or alternatively, loaded
 at runtime.
@@ -171,8 +171,8 @@ example are the BLAS/LAPACK routines, which are written in Fortran, but provide
 a C/C++ interface.
 
 In addition to the considerations above, this needs to ensure that the types
-between the language of the callee and the function are transformed
-appropriately.
+between the language of the callee and the types of the language that the
+function is implemented in are transformed correctly.
 
 ## Transpilation
 
@@ -205,7 +205,7 @@ libraries that need to match the target architecture).
 
 Additionally, many build procedures assume they can execute arbitrary code
 (e.g. code generation) on the same architecture as the host, which is not given
-in this case.
+in this case, and needs to be worked around.
 
 ## Performance Optimization
 
