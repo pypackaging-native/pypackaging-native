@@ -15,6 +15,10 @@ execution that is baked into an artifact. For some common terms, it's
 recommended to familiarize yourself with [compilation concepts](./compilation_concepts.md)
 first.
 
+Note that ABI appears for all distribution of binary artefacts, not just those
+compiled from C/C++. The concepts are the same in all cases though, so for
+brevity, we restrict ourselves to these languages here.
+
 A key focus for binary packaging systems is _maintaining binary compatibility_.
 If the packagers are not successful in maintaining that compability, we then get
 an _ABI break_, which can lead to crashes, segfaults, corrupted data etc.
