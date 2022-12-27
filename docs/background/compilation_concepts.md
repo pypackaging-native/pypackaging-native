@@ -1,29 +1,29 @@
-> What does this have to do with Python?
->
-> Python as a glue language is essentially exposed to the sum of all problems
-> that other languages have with their binary distribution, and this is a really
-> vast field (even just for C/C++).
->
-> Needless to say, adequately summarizing decades of work and developments that
-> have lead us to where we are now is not easy. If you find errors or things to
-> improve, please open an issue or PR!
+??? question "What does this have to do with Python?"
 
-# Basic Code Compilation Concepts
+    Python as a glue language is essentially exposed to the sum of all problems
+    that other languages have with their binary distribution, and this is a
+    really vast field (even just for C/C++).
+
+    Needless to say, adequately summarizing decades of work and developments
+    that have lead us to where we are now is not easy. If you find errors or
+    things to improve, please open an issue or PR!
+
+# Basic code compilation concepts
 
 In order to get a computer to execute a given unit of work (say, application `X`
 calling a function `f` from a previously compiled library `libfoo`), a lot of
 preconditions have to be met:
 
 - The function needs to have been compiled into instructions that the
-  computer understands -- a _symbol_.
+  computer understands; a _symbol_.
 - The symbol for `f` needs to be named (resp. "mangled") in a consistent manner
   between the compilation of the current code (for `X`), resp. the compilation
   of the library (`libfoo`, which contains the symbol for `f`).
 - The symbol for `f` needs to have be discoverable from within the currently
-  running process -- assuming `libfoo` is available on the machine where we are
+  running process; assuming `libfoo` is available on the machine where we are
   compiling, this is ensured by the _linker_.
 - Variables passed to the function need to be loaded into the right CPU
-  registers -- this is highly dependent on the _calling convention_ of a given
+  registers; this is highly dependent on the _calling convention_ of a given
   CPU, or rather, CPU family.
 - The code (in `X`) calling a given symbol (e.g. for `f`) needs to be
   excruciatingly compatible with the actual implementation of that symbol
@@ -34,7 +34,7 @@ when trying to get work done, but it is unfortunately unavoidable when
 considering the realities of packaging and distributing software as
 pre-compiled binary artifacts.
 
-## Symbols, Mangling and Linkers
+## Symbols, mangling and linkers
 
 ### Symbols
 
@@ -70,7 +70,7 @@ If you click the link above, you will see that this assembly looks completely
 different when compiled for another processor architecture (e.g. arm64, as used
 in Apple M1 and newer).
 
-### Symbol Name Mangling
+### Symbol name mangling
 
 Note as well that, in C, the symbol `square` has exactly the same name as the
 function - there is a 1:1 relationship, or in other words, there is no "mangling"
@@ -117,7 +117,7 @@ and this brings a lot of constraints. The linker will search for a given symbol
 within different paths on the system, in order, but this is obviously very
 fragile, in case symbols appear in several libraries on the linker path.
 
-### Key Take-aways
+### Key take-aways
 
 - Functions are compiled into symbols.
 - Symbol names are 1:1 with function names in C, mangled according to their
@@ -125,10 +125,10 @@ fragile, in case symbols appear in several libraries on the linker path.
 - These symbols share a global name space.
 - Symbols are picked by the linker in order of precedence on the path.
 
-## Shared vs. Static Libraries
+## Shared vs. static libraries
 
 From a high-level point of view, libraries are collections of symbols, and can
-come in two different flavors -- static and dynamic. In very crude terms, static
+come in two different flavors: static and dynamic. In very crude terms, static
 libraries are only useful at compile time (i.e. compiling an app `X` against a
 static library `libfoo` will copy the symbols from `libfoo` required by `X` into
 the final artifact), whereas for dynamic libraries, the symbols will only be
@@ -145,9 +145,19 @@ As a rough overview:
 
 The trade-offs involved here are very painful. Either we duplicate symbols for
 every artifact that uses them (and the bloat can be extreme, e.g. statically
-linking the MSVC runtime can increase storage / memory footprint by 100MB), or
-we face the constraints of subjecting us to ABI stability, and finding the right
-symbols at runtime.
+linking the MSVC runtime[^1] can increase storage / memory footprint by 100MB),
+or we face the constraints of subjecting us to ABI stability, and finding the
+right symbols at runtime. For a further deep-dive into how Microsoft evolves its
+UCRT (Universal C Runtime), see [here](https://mingwpy.github.io/ucrt.html).
+
+[^1]:
+    This is an extreme example, but it is used in the wild, see e.g. [protobuf](https://github.com/protocolbuffers/protobuf/blob/v21.12/CMakeLists.txt#L70).
+    Note that Microsoft itself [discourages](https://devblogs.microsoft.com/cppblog/introducing-the-universal-crt/)
+    this pattern, but still supports it:
+    > We strongly recommend against static linking of the Visual C++ libraries,
+    > for both performance and serviceability reasons, but we recognize that
+    > there are some use cases that require static libraries and we will continue
+    > to support the static libraries for those reasons.
 
 In general, large parts of the wider computing ecosystem have found the
 duplication inherent in static libraries unacceptable, and would rather deal
@@ -166,7 +176,7 @@ however still doesn't cover all necessary symbols (e.g. global static data membe
 Using the latter may also have a performance impact, as it keeps the compiler
 from inlining calls to symbols that have been exported.
 
-### Key Take-aways
+### Key take-aways
 
 - Static libraries are only useful at compile-time; cause duplication of symbols,
   but are much less susceptible to the intricacies of ABI.
@@ -196,7 +206,7 @@ mentioned above that this implies. However, few project's expose their
 cythonized functions as a C-API, so there are generally fewer concerns about
 ABI stability in this scenario.
 
-## Cross-Compilation
+## Cross-compilation
 
 Many projects use public CI, which might not have more or less exotic
 architectures available in their agents. This means that publishing binary
@@ -219,9 +229,9 @@ Additionally, many build procedures assume they can execute arbitrary code
 (e.g. code generation) on the same architecture as the host, which is not given
 in this case, and needs to be worked around.
 
-## Performance Optimization
+## Performance optimization
 
-### Compiler Flags
+### Compiler flags
 
 TODO: Optimization levels; inlining functions; problems with `-Ofast`
 
