@@ -49,7 +49,7 @@ mov     edi, 1
 xor     esi, esi
 call    f
 ```
-Here we see that we now need two registers, edi` and `esi`, to correctly pass
+Here we see that we now need two registers, `edi` and `esi`, to correctly pass
 `value` into the function `f`.
 
 Imagine then a situation where we did not change our code away from `long long`,
