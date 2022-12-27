@@ -19,7 +19,7 @@ first.
 
 Let's assume we are using a function `f` from a C library `libfoo`, and this
 function takes an argument of type `long long`.
-```
+```C
 extern int f (long long value);
 
 int main () {
@@ -29,7 +29,7 @@ int main () {
 ```
 
 If we inspect the assembly
-```
+```as
 mov     edi, 1
 call    f
 ```
@@ -39,7 +39,7 @@ and `long long` matches this on unix platforms.
 
 If we replace the first line with `extern int f (__int128_t value);`, the
 assembly becomes:
-```
+```as
 mov     edi, 1
 xor     esi, esi
 call    f
@@ -64,6 +64,7 @@ values in the `esi` register --, in a way that's extremely hard to debug.
 
 This is but a trivial example, there are innumerable ways for libraries you
 rely on to break their ABI, including:
+
 - Changing anything about a function signature
 - Changing (almost) anything about templating (C++)
 - Adding a data member or virtual functions to a class
@@ -73,7 +74,7 @@ rely on to break their ABI, including:
 
 ## Interaction With Shared Libraries
 
-What the above means is that -- bascially -- you can never change anything about
+What the above means is that, basically, you can never change anything about
 a C symbol that has been distributed to consumers in binary form, especially
 those in shared libraries. Since some code effectively must use shared libraries
 (not least the C standard library, in the form of glibc/musl on linux), this is
@@ -90,9 +91,10 @@ even though glibc takes extreme care about remaining backwards compatible.
 Fundamentally, ABI can break at pretty much any point that's involved in the
 computation of our program. For the sake of clarity, let us divide these into
 three different levels:
+
 1. ABI breaks in third-party libraries
-1. ABI breaks in compiler or due to compiler configuration
-1. ABI breaks in the language standard
+2. ABI breaks in compiler or due to compiler configuration
+3. ABI breaks in the language standard
 
 The further down we go this list, the more impactful an ABI break becomes, so
 much so that the latter two happen rarely if ever. When they do happen, they
@@ -140,7 +142,7 @@ start their own C++-alike language, [Carbon](https://github.com/carbon-language/
 
 For completeness, we need to distinguish that here we are not talking about
 ABI breaks in the compiler infrastructure (in many ways, compilers are less
-exposed because using them -- i.e. recompiling -- drastically lessens the
+exposed because using them, i.e. recompiling, drastically lessens the
 exposure to ABI), but rather of ABI breaks in the artifacts produced by them.
 
 Generally, compiler authors are almost as reluctant to break ABI as the language
@@ -148,8 +150,8 @@ committees, because the effects are largely the same. An exception was MSVC,
 which for a long time used to change the ABI it generated with every release,
 meaning that each Visual Studio release (before VS2015) required recompilation
 of all involved binary artifacts. Starting from VS2015 (up to including VS2022
-currently), MSVC has not broken ABI anymore, which means it's possible to --
-for example -- compile with VS2019 against a shared library produced by VS2017.
+currently), MSVC has not broken ABI anymore, which means it's possible to for
+example compile with VS2019 against a shared library produced by VS2017.
 
 However, compilers expose a vast majority of flags, some of which have impacts
 on the ABI of the produced artifacts. It's therefore essential to have some
@@ -170,7 +172,7 @@ exist to ease this work.
 For distributions that focus on using shared libraries, this means they need to
 be able to track which packages are dependent on any given library, and then
 rebuild all those in a short timespan, in order to roll out a new version of
-that library (due to the fact that -- absent explicit inline namespacing --
+that library (due to the fact that, absent explicit inline namespacing,
 there can only be one version of a shared library in any given environment).
 
 ## Abseil
@@ -187,7 +189,7 @@ performance impact). However, these backports are generally not ABI-compatible
 with the implementations for later standard versions.
 
 This puts abseil in the curious position that the C++ standard version used to
-compile it has an impact on its ABI. This is because abseil -- by default --
+compile it has an impact on its ABI. This is because abseil by default
 will pick standard facilities when available, and otherwise fall back to its
 backports. As an example, `absl::string_view` compiled with C++17 will use the
 C++17 `std::string_view` ABI, whereas for C++14 and below, it will have a

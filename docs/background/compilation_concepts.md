@@ -12,7 +12,8 @@
 
 In order to get a computer to execute a given unit of work (say, application `X`
 calling a function `f` from a previously compiled library `libfoo`), a lot of
-preconditions have to be met.
+preconditions have to be met:
+
 - The function needs to have been compiled into instructions that the
   computer understands -- a _symbol_.
 - The symbol for `f` needs to be named (resp. "mangled") in a consistent manner
@@ -50,7 +51,7 @@ int square(int num) {
 
 will be [translated](https://godbolt.org/z/WT5Wa4bhq) to the following assembly
 on x86-64 hardware:
-```
+```as
 square:
         push    rbp
         mov     rbp, rsp
@@ -62,7 +63,7 @@ square:
 ```
 There is a lot of ceremony for reading in the argument into a register, setting
 up another register for the result, while the actual work is done in:
-```
+```as
         imul    eax, eax
 ```
 If you click the link above, you will see that this assembly looks completely
@@ -134,6 +135,7 @@ the final artifact), whereas for dynamic libraries, the symbols will only be
 _referenced_, and then loaded from the dynamic library at runtime.
 
 As a rough overview:
+
 | | Static `libfoo` | Dynamic `libfoo` |
 |---|---|---|
 | Compiling app `X` | Copies required symbols from `libfoo`<br/>into final artifact for `X` | References required symbols from `libfoo` |
