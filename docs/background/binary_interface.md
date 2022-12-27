@@ -33,8 +33,9 @@ If we inspect the assembly
 mov     edi, 1
 call    f
 ```
-we see that a single register -- `edi` -- is used, which makes sense since our
-registers are 64 bits wide, and `long long` matches this on unix platforms.
+we see that a single register -- `edi` -- is used to pass the `value` argument
+to the function `f`, which makes sense since our registers are 64 bits wide,
+and `long long` matches this on unix platforms.
 
 If we replace the first line with `extern int f (__int128_t value);`, the
 assembly becomes:
@@ -43,16 +44,23 @@ mov     edi, 1
 xor     esi, esi
 call    f
 ```
-Here we now need two registers -- `edi` and `esi`. Assuming the author of
-`libfoo` (that contains `f`) wants to upgrade to wider integers because their
-users are asking for that, and we upgrade the shared library our code is linked
-against _without_ recompilation, then our code (which expected `long long`)
-would only set up the `edi` register correctly, but the symbol for `f` would
-use both `edi` and `esi`.
+Here we see that we now need two registers -- `edi` and `esi` to correctly pass
+`value` into the function `f`.
+
+Imagine then a situation where we did not change our code away from `long long`,
+but where the author of `libfoo` (that contains `f`) wants to upgrade to wider
+integers because their users are asking for that. If we upgrade the shared
+library `libfoo` (that our code is linked against) _without_ recompilation of
+our source own application, then our code would still run (because the linker
+finds a symbol with the right name `f` due to the lack of name mangling).
+However, because the artifact we had compiled expects `f` to take `long long`,
+it would only set up the `edi` register correctly, but the upgraded symbol for
+`f` would now use both `edi` and `esi`.
 
 If we're "lucky", this only leads to a crash, but it might lead to pretty much
-arbitrary behavior based on whatever happens to be in `esi`, in a way that's
-extremely hard to debug.
+arbitrary behavior based on whatever happens to be in `esi` -- anything from
+wrong results to Heisenbugs based on any other code that might leave some random
+values in the `esi` register --, in a way that's extremely hard to debug.
 
 This is but a trivial example, there are innumerable ways for libraries you
 rely on to break their ABI, including:
