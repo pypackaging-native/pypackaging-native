@@ -168,7 +168,7 @@ from inlining calls to symbols that have been exported.
 
 Calling functions from a library written in a different language. A very common
 example are the BLAS/LAPACK routines, which are written in Fortran, but provide
-a C/C++ interface.
+a C interface in addition to the Fortran one.
 
 In addition to the considerations above, this needs to ensure that the types
 between the language of the callee and the types of the language that the
@@ -179,8 +179,8 @@ function is implemented in are transformed correctly.
 Many Python projects do not deal with C/C++ directly, but use transpilers like
 Cython or Pythran that _generate_ C resp. C++ code from (quasi-)Python source
 code. Aside from almost always being exposed to the numpy C API & ABI, these
-modules compiled into shared libraries themselves, with all the caveats
-mentioned above that this implies. However, much fewer project's expose their
+modules compile into shared libraries themselves, with all the caveats
+mentioned above that this implies. However, few project's expose their
 cythonized functions as a C-API, so there are generally fewer concerns about
 ABI stability in this scenario.
 
@@ -194,8 +194,8 @@ another (e.g. aarch64).
 
 A recent example where this was necessary at scale was the introduction of a
 new processor architecture for Apple's M1 notebooks, for which (almost) no CI
-agents were available. Providing builds for `linux-aarch64`, `linux-ppc64le`
-or `windows-arm64` are often in similar situations.
+agents were available. Distributors of packages for `linux-aarch64`,
+`linux-ppc64le` or `windows-arm64` are often in similar situations.
 
 The difficulty in cross-compilation is that it needs further attention and
 separation (both conceptually, as well as in metadata) on the different
