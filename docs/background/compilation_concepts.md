@@ -169,11 +169,13 @@ that copying those symbols into every produced binary would be extremely
 wasteful.
 
 It's worth noting that on Windows, symbols in shared libraries work quite
-differently than on unix. Due to both linker limitations, resp. an extreme focus
-on stability, symbols on Windows have to be explicitly marked for export & import,
-and this needs very intrusive source code changes for libraries aiming to be
-cross-platform, or using things like `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS`, which
-however still doesn't cover all necessary symbols (e.g. global static data members).
+differently than on unix. Due to various reasons, symbols on Windows have to be
+explicitly marked `__declspec(dllexport)` & `__declspec(dllimport)` in the
+source with a macro that switches appropriately. This is quite an intrusive
+change for libraries aiming to be cross-platform, and the reason that many
+libraries developed primarily on unix do not support shared builds on Windows.
+Even using workarounds like `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS` still doesn't
+cover all necessary symbols (e.g. global static data members).
 
 Using the latter may also have a performance impact, as it keeps the compiler
 from inlining calls to symbols that have been exported.
@@ -185,15 +187,18 @@ from inlining calls to symbols that have been exported.
 - Shared libraries need to be available both at compilation as well as at runtime,
   solve the symbol duplication, but are extremely susceptible to ABI breaks.
 - Due to the global symbol namespace, there can only be one version / build of
-  a shared library per environment (unless explicitly different symbol namespaces
-  are used).
+  a shared library per environment (unless there is explicit versioning for the
+  symbols or libraries themselves, or for C++, explicitly different inline
+  namespaces are used).
 
 
 ## Foreign-Function Interface (FFI)
 
-Calling functions from a library written in a different language. A very common
-example are the BLAS/LAPACK routines, which are written in Fortran, but provide
-a C interface in addition to the Fortran one.
+For any given task, a function may already exist in a library written in another
+language than the one at hand. In order to avoid rewriting (and maintaining)
+that functionality, it's desirable to have a way to call such functions from a
+"foreign" language. A common example are the BLAS/LAPACK routines, which are
+written in Fortran, but provide a C interface in addition to the Fortran one.
 
 In addition to the considerations above, this needs to ensure that the types
 between the language of the callee and the types of the language that the
