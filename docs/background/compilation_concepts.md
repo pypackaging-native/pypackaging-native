@@ -172,7 +172,7 @@ It's worth noting that on Windows, symbols in shared libraries work quite
 differently than on unix. Due to various reasons, symbols on Windows have to be
 explicitly marked `__declspec(dllexport)` & `__declspec(dllimport)` in the
 source with a macro that switches appropriately. This is quite an intrusive
-change for libraries aiming to be cross-platform, and the reason that many
+change for libraries aiming to be cross-platform, and the reason that several
 libraries developed primarily on unix do not support shared builds on Windows.
 Even using workarounds like `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS` still doesn't
 cover all necessary symbols (e.g. global static data members).
