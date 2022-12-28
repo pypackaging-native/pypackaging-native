@@ -15,7 +15,7 @@ execution that is baked into an artifact. For some common terms, it's
 recommended to familiarize yourself with [compilation concepts](./compilation_concepts.md)
 first.
 
-Note that ABI appears for all distribution of binary artefacts, not just those
+Note that ABI appears for all distribution of binary artifacts, not just those
 compiled from C/C++. The concepts are the same in all cases though, so for
 brevity, we restrict ourselves to these languages here.
 
@@ -23,6 +23,7 @@ A key focus for binary packaging systems is _maintaining binary compatibility_.
 If the packagers are not successful in maintaining that compability, we then get
 an _ABI break_, which can lead to crashes, segfaults, corrupted data etc.
 Unsurprisingly, a lot of effort goes into avoiding them.
+
 
 ## An example of an ABI break
 
@@ -82,13 +83,14 @@ rely on to break their ABI, including:
 - Changing your compiler or any of many relevant compilation flags
 - Etc.
 
+
 ## Interaction with shared libraries
 
 What the above means is that, bascially, you can never change anything about a
 C symbol that has been distributed to consumers in binary form, especially those
 in shared libraries. Since some code effectively must use shared libraries
 (not least the C standard library, in the form of glibc/[musl](https://musl.libc.org)
-on linux, resp. the UCRT on windows), this is one if not _the_ reason for the
+on linux, resp. the UCRT on Windows), this is one if not _the_ reason for the
 importance of distributions, because those will ensure that all their packages
 are compiled consistently against a given version of libc (and other libraries
 like the C++ standard library).
@@ -188,10 +190,11 @@ can only be one version of a shared library in any given environment).
 
 ??? note "Contrast with default approach in Python packaging"
 
-    Because the standard packaging in python (e.g. wheels) cannot express a
-    dependency on non-Python artefacts, the default approach is to fully copy
+    Because the standard packaging in Python (wheels) cannot express a
+    dependency on non-Python artifacts, the default approach is to fully copy
     ("vendor") the respective binaries into the wheel, and mangle their symbols
     in such a way that they do not get accidentally picked up from elsewhere.
+
 
 ## Abseil
 
@@ -206,29 +209,29 @@ cut down on useless copies involving strings, which has a substantial
 performance impact). However, these backports are generally not ABI-compatible
 with the implementations for later standard versions.
 
-This puts abseil in the curious position that the C++ standard version used to
-compile it has an impact on its ABI. This is because abseil will, by default,
+This puts Abseil in the curious position that the C++ standard version used to
+compile it has an impact on its ABI. This is because Abseil will, by default,
 pick standard facilities when available, and otherwise fall back to its
 backports. As an example, `absl::string_view` compiled with C++17 will use the
 C++17 `std::string_view` ABI, whereas for C++14 and below, it will have a
 different ABI.
 
 Due to the constraint around having only one shared library per environment,
-abseil strongly recommends against distribution of its binary artifacts,
+Abseil strongly recommends against distribution of its binary artifacts,
 especially in shared builds. In fact, the only mode of operation that is really
-considered supported by upstream abseil is compiling all dependencies with the
+considered supported by upstream Abseil is compiling all dependencies with the
 same C++ standard version. This is obviously incompatible with servicing a large
 ecosystem, where some libraries might still require C++11, and some already
 require C++20.
 
-This issue would be _somewhat_ manageable if abseil types were only ever used
+This issue would be _somewhat_ manageable if Abseil types were only ever used
 internally in libraries, meaning things could be solved with a certain degree of
-care which (static) builds of abseil are available at build time. However, the
+care which (static) builds of Abseil are available at build time. However, the
 situation is exacerbated drastically by the fact that several projects are using
-(or beginning to use) abseil types in their public API, e.g. [protobuf](https://developers.google.com/protocol-buffers/docs/news/2022-08-03#abseil-dep).
+(or beginning to use) Abseil types in their public API, e.g. [protobuf](https://developers.google.com/protocol-buffers/docs/news/2022-08-03#abseil-dep).
 
 In the worst case, this means a full bifurcation of the necessary builds, though
-more realistically, it means that all abseil consumers more or less need to
+more realistically, it means that all Abseil consumers more or less need to
 agree on a given ABI. Further alternatives [exist](https://github.com/conda-forge/abseil-cpp-feedstock/issues/45)
 (e.g. _always_ using the backport types, even if newer C++ standards are used),
 but are non-trivial to realize at scale.

@@ -1,3 +1,5 @@
+# Basic code compilation concepts
+
 ??? question "What does this have to do with Python?"
 
     Python as a glue language is essentially exposed to the sum of all problems
@@ -7,8 +9,6 @@
     Needless to say, adequately summarizing decades of work and developments
     that have lead us to where we are now is not easy. If you find errors or
     things to improve, please open an issue or PR!
-
-# Basic code compilation concepts
 
 In order to get a computer to execute a given unit of work (say, application `X`
 calling a function `f` from a previously compiled library `libfoo`), a lot of
@@ -33,6 +33,7 @@ It's not useful for the average programmer to consider this level of detail
 when trying to get work done, but it is unfortunately unavoidable when
 considering the realities of packaging and distributing software as
 pre-compiled binary artifacts.
+
 
 ## Symbols, mangling and linkers
 
@@ -79,7 +80,7 @@ of the symbol name. This is because C has no concept of overloading functions
 
 It also means that you can never change anything about a C symbol that has been
 distributed to consumers in binary form. We return to this in the
-[background about ABI](./binary_interface.md)
+[background content about ABI](./binary_interface.md).
 
 In C++, the same function name can have several different signatures; for
 example
@@ -125,6 +126,7 @@ fragile, in case symbols appear in several libraries on the linker path.
 - These symbols share a global name space.
 - Symbols are picked by the linker in order of precedence on the path.
 
+
 ## Shared vs. static libraries
 
 From a high-level point of view, libraries are collections of symbols, and can
@@ -166,9 +168,9 @@ with the constraints of ABI stability. For example, standard functions like
 that copying those symbols into every produced binary would be extremely
 wasteful.
 
-It's worth noting that on windows, symbols in shared libraries work quite
+It's worth noting that on Windows, symbols in shared libraries work quite
 differently than on unix. Due to both linker limitations, resp. an extreme focus
-on stability, symbols on windows have to be explicitly marked for export & import,
+on stability, symbols on Windows have to be explicitly marked for export & import,
 and this needs very intrusive source code changes for libraries aiming to be
 cross-platform, or using things like `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS`, which
 however still doesn't cover all necessary symbols (e.g. global static data members).
@@ -178,13 +180,14 @@ from inlining calls to symbols that have been exported.
 
 ### Key take-aways
 
-- Static libraries are only useful at compile-time; cause duplication of symbols,
-  but are much less susceptible to the intricacies of ABI.
+- Static libraries are only useful at compile-time; they cause duplication of
+  symbols, but are much less susceptible to the intricacies of ABIs.
 - Shared libraries need to be available both at compilation as well as at runtime,
   solve the symbol duplication, but are extremely susceptible to ABI breaks.
 - Due to the global symbol namespace, there can only be one version / build of
   a shared library per environment (unless explicitly different symbol namespaces
   are used).
+
 
 ## Foreign-Function Interface (FFI)
 
@@ -196,38 +199,41 @@ In addition to the considerations above, this needs to ensure that the types
 between the language of the callee and the types of the language that the
 function is implemented in are transformed correctly.
 
+
 ## Transpilation
 
 Many Python projects do not deal with C/C++ directly, but use transpilers like
 Cython or Pythran that _generate_ C resp. C++ code from (quasi-)Python source
-code. Aside from almost always being exposed to the numpy C API & ABI, these
+code. Aside from almost always being exposed to the NumPy C API & ABI, these
 modules compile into shared libraries themselves, with all the caveats
-mentioned above that this implies. However, few project's expose their
-cythonized functions as a C-API, so there are generally fewer concerns about
+mentioned above that this implies. However, few projects expose their
+cythonized functions as a C API, so there are generally fewer concerns about
 ABI stability in this scenario.
+
 
 ## Cross-compilation
 
-Many projects use public CI, which might not have more or less exotic
-architectures available in their agents. This means that publishing binary
-artifacts for such architectures can often only be achieved with
-cross-compilation, i.e. compiling _on_ one architecture (e.g. x86-64), _for_
-another (e.g. aarch64).
+Many projects use public CI services, which might not offer some of the more
+exotic or emerging architectures a project wants to support. This means that
+publishing binary artifacts for such architectures can often only be achieved
+with cross-compilation, i.e. compiling _on_ one architecture (e.g., x86-64),
+_for_ another (e.g., aarch64).
 
 A recent example where this was necessary at scale was the introduction of a
 new processor architecture for Apple's M1 notebooks, for which (almost) no CI
 agents were available. Distributors of packages for `linux-aarch64`,
 `linux-ppc64le` or `windows-arm64` are often in similar situations.
 
-The difficulty in cross-compilation is that it needs further attention and
-separation (both conceptually, as well as in metadata) on the different
+The difficulty in cross-compilation is that it needs further attention to and
+separation (both conceptually, as well as in metadata) of the different
 requirements for the build environment (e.g. the necessary build tools that
 are executed on the x86-64 agent), as well as the host environment (i.e. the
 libraries that need to match the target architecture).
 
 Additionally, many build procedures assume they can execute arbitrary code
-(e.g. code generation) on the same architecture as the host, which is not given
-in this case, and needs to be worked around.
+(e.g. code generation) on the same architecture as the host, which is not a
+given in this case and may need to be worked around.
+
 
 ## Performance optimization
 
@@ -242,7 +248,7 @@ https://github.com/conda-forge/conda-forge.github.io/issues/1824
 
 In the search for speed, it's possible to do a whole-program analysis after
 everything has been compiled, and let the compiler identify which functions
-can be inlined. This is generally out of scope for python packaging, because
+can be inlined. This is generally out of scope for Python packaging, because
 it is too involved. However, CPython release builds [make use](https://github.com/python/cpython/blob/main/README.rst#link-time-optimization)
 of it.
 
@@ -251,16 +257,16 @@ of it.
 If a program is instrumented (compiled with tracking capabilities) to profile
 common usage patterns, it is possible to optimize the layout of the final
 artifact to ensure that hot paths get preferred in branch prediction. This is
-generally out of scope for python packaging, because it is too involved. However,
+generally out of scope for Python packaging, because it is too involved. However,
 CPython release builds [make use](https://github.com/python/cpython/blob/main/README.rst#profile-guided-optimization)
 of it.
 
 ### Binary Optimization and Layout Tool (BOLT)
 
-Further optimization of the produced binary artefacts can be achieved by
+Further optimization of the produced binary artifacts can be achieved by
 arranging their layout to avoid cache misses under profiled behavior. The
 respective [tool](https://github.com/llvm/llvm-project/blob/main/bolt/README.md)
 is based on LLVM and still under heavy development, and not suitable for all
-usecases. It is generally out of scope for python packaging, because it is too
+usecases. It is generally out of scope for Python packaging, because it is too
 involved. However, CPython [added](https://github.com/python/cpython/blob/main/Doc/using/configure.rst#performance-options)
 experimental support as of 3.12.
