@@ -44,6 +44,7 @@ nav:
     - 'key-issues/unexpected_fromsource_builds.md'
   - 'other_issues.md'
   - 'references.md'
+  - 'glossary.md'
 
 plugins:
   - search
