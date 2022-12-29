@@ -11,10 +11,12 @@
 | BOLT | Binary Optimization and Layout Tool | See [here](./background/compilation_concepts.md)|
 | `cffi` | The C FFI for Python | |
 | CI | Continuous Integration | Testing all changes made to a given software, resp. the infrastructure that makes this possible |
+| CLI | Command Line Interface | |
 | CPU | Central Processing Unit | Main circuitry for executing machine instructions on a computer; contrast GPU |
 | CUDA | Compute Unified Device Architecture | Parallel Computing Framework for nVidia GPUs |
 | DRY | Don't Repeat Yourself | Principle in software development aimed at reducing repetition |
 | GCC | GNU Compiler Collection | Main compiler family (for C / C++ / Fortran etc.) on linux |
+| GUI | Graphical UI | |
 | GNU | GNU's Not Unix | Collection of free software packages under GPL License |
 | GPL | (GNU) General Public License | Foundational "copyleft" license of the free software movement |
 | glibc | GNU C Library | Widely used implemetation of the C standard library |
@@ -50,6 +52,8 @@
 | SSE | Streaming SIMD Extensions | Various extensions to the x86 instruction set (SSE, SSE2, SSE3, SSSE3, SSE4) for SIMD |
 | TOML | Tom's Obvious Minimal Language | Configuration language chosen for `pyproject.toml`, `cargo` etc., see [here](https://toml.io) |
 | UCRT | Universal C Runtime | Windows equivalent to glibc/musl |
+| UI | User Interface | |
+| UX | User eXperience | |
 | VCS | Version Control System | Tool to keep track of changes in source code, e.g. `git` |
 | `venv` | Virtual ENVironments | Python standard library module for creating environments; distinct from `virtualenv` | See [here](https://docs.python.org/3/library/venv.html) |
 
@@ -62,6 +66,7 @@
 | Build Backend | Specifically in the context of `pyproject.toml` builds, the tool responsible for building a Python package | `setuptools`, `flit`, `hatch`, ... |
 | Build Frontend | Specifically in the context of `pyproject.toml` builds, the tool used to trigger a build | Predominantly `pip` |
 | Calling Convention | Agreed-upon contract with describes how to interact with a given CPU (family) | See [here](https://en.wikipedia.org/wiki/Calling_convention) |
+| `cargo` | Package manager for the Rust language, often upheld as a positive example for installation UX | See [here](https://doc.rust-lang.org/cargo/) |
 | Conda | Cross-platform package & environment manager, based on distribution channels separate from PyPI | See [here](https://docs.conda.io/) |
 | Conda-forge | Community-led packaging effort for (predominantly) Python packages | See [here](https://conda-forge.org/) |
 | Cross-compilation | Compiling _on_ a given CPU architecture _for_  another CPU architecture | See [here](./background/compilation_concepts.md) |
