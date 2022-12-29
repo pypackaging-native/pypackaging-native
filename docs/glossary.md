@@ -39,7 +39,7 @@
 | OpenMP | Open Multi Processing | Multi-platform API for enabling multi-processing in C/C++/Fortran |
 | OS | Operating System | E.g. Linux, MacOS, Windows |
 | PEP | Python Enhancement Proposal | See [here](https://peps.python.org/pep-0000/) |
-| `pip` | Pip Installs Packages | Default installer for Python packages, distributed with CPython itself | See [here](https://pip.pypa.io/en/stable/) |
+| `pip` | Pip Installs Packages | Default installer for Python packages, distributed with CPython itself; see [here](https://pip.pypa.io/en/stable/) |
 | PGO | Profile-Guided Optimization | See [here](./background/compilation_concepts.md#profile-guided-optimization-pgo)|
 | PSF | Python Software Foundation | See [here](https://www.python.org/psf-landing/) |
 | PyPA | Python Packaging Authorithy | Group which maintains core set of projects in Python packaging |
@@ -79,7 +79,7 @@
 | `distutils` | Python standard library module for building and installing packages; added in 1.6, to be removed in 3.12 | See [here](https://docs.python.org/3/library/distutils.html) |
 | `easy_install` | Deprecated method for installing Python packages, superseded by `pip install` | See [here](https://setuptools.pypa.io/en/latest/deprecated/easy_install.html) |
 | Egg | Historical format for distributing Python packages | See [here](https://setuptools.pypa.io/en/latest/deprecated/python_eggs.html) |
-| Emulation | Pretending to run on a different CPU architecture; this can be used to avoid cross-compilation | See [here](https://en.wikipedia.org/wiki/Emulator) |
+| Emulation | Pretending to run on a different CPU architecture; this can be used to avoid cross-compilation | See QEMU, resp. [here](https://en.wikipedia.org/wiki/Emulator) |
 | Linker | A tool to correctly find the required third-party symbols for a given project | GNU's gold, LLVM's lld, [mold](https://github.com/rui314/mold) |
 | Mamba | Alternative implementation of the `conda` CLI tool with a faster solver | See [here](https://mamba.readthedocs.io/) |
 | Manylinux | Baseline tooling to allow distributing wheels across various Linux distributions | See [PEP 600](https://peps.python.org/pep-0600/) and the PEPs it replaces |
