@@ -133,6 +133,10 @@ dynamic dispatch solution is: NumPy only gained support for it in 2020, and
 SciPy still does not have it (it chooses SSE3 instructions, first released in
 2005, as the most recent instructions that are allowed to be used on x86).
 
+Less sophisticated methods employed in the wild are compiling the project twice
+(e.g. once with SSE3 and once with AVX2), and defaulting to importing the latter
+while falling back to the former. Obviously this doubles binary size.
+
 The "distribute separate wheels under a different package name (choice 3 above)
 is so user-unfriendly, and also fairly labor-intensive, that we cannot think of
 a single open source project that does this on PyPI.

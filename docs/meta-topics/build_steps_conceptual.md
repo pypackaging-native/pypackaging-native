@@ -128,7 +128,7 @@ build system, the dependency can then be used:
 !!! important
 
     There are quite a few build systems and even more different package
-    managers. These can be mixed and matched[^1] - each build system can be
+    managers. These can be mixed and matched[^1][^2] - each build system can be
     used in any package manager.
 
 [^1]:
@@ -139,6 +139,11 @@ build system, the dependency can then be used:
     package managers (e.g., TensorFlow is built with Bazel and distributed as
     wheels and conda packages) - but that is typically challenging. We won't
     consider that further here.
+
+[^2]:
+    This is not true for the packages/libraries themselves though, which often
+    have one primary build system, and in the vast majority of cases can _only_
+    be built by one particular build system.
 
 
 ### Types of package managers

@@ -207,6 +207,11 @@ issue for matching wheels is still open
     and [pytorch#51039](https://github.com/pytorch/pytorch/issues/51039#issuecomment-1183263853)
     for details.
 
+An even thornier issue is the proliferation of Abseil in the API of projects
+like [protobuf](https://developers.google.com/protocol-buffers/docs/news/2022-08-03),
+given that Abseil's ABI is sensitive (by default) to the C++ standard version
+being used to compile it, and this needs to be held consistent (essentially)
+across the entire ecosystem. For more details, see [here](../../background/binary_interface.md#abseil).
 
 ## Problems
 
