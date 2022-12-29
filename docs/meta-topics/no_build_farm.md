@@ -57,6 +57,47 @@ probably the most central point. Now that `multibuild` is abandoned,
 open source projects to use by many of the most popular projects with native
 code.
 
+!!! info "The cost of a build farm"
+
+    Build farms come with substantial-to-massive costs in terms of build &
+    hosting infrastructure, automation that needs to be maintained, and
+    generally human attention/intervention for cases that go wrong.
+
+    These costs already appear for the above-mentioned "build and verify" model
+    used for CRAN. However, when wishing to follow the widely-used practice
+    among distributions to rely predominantly on shared libraries, this brings
+    a massive further increase in necessary automation and maintenance (though
+    the benefits are such that this is the norm rather than the exception).
+
+    In particular, doing so needs careful tracking which packages are exposed to
+    any given (shared) library's ABI, the ABI stability of that library as
+    expressed through its version scheme, rebuilding all dependent packages once
+    an ABI-changing library version is released, and finally representing all
+    that accurately enough in metadata so that the resolver will only choose
+    compatible package combinations for a given environment.
+
+    Due to the limitation of only having a single shared library on the path
+    searched by the linker for symbols at runtime (see [here]../background/compilation_concepts.md#linkers)
+    for more details), this kind of ecosystem-wide rebuild needs to be done
+    relatively quickly. This is because any given package that has a release
+    in the meantime can only be compiled for either the old or for the new ABI
+    (with very few exceptions for transitions that are more onerous, otherwise
+    one quickly suffers a combinatorial explosion of required build variants),
+    and _not_ moving the ecosystem as a whole to the new baseline essentially
+    means a bifurcation which packages can be co-installed with each other.
+
+    It is indicative of the amount of effort required for the maintenance of
+    such an undertaking to check the permanently ongoing so-called "migrations"
+    in conda-forge, e.g. [here](https://conda-forge.org/status/#other_migrations)
+    and [here](https://conda-forge.org/status/#closed_migrations). While a lot
+    of rebuilds can be automated (requiring infrastructure that is maintained
+    and operated), the initial integration of a library needs to be done
+    manually, and a persistent percentage of packages (say ~1-10%) will fail
+    any given migration for various reasons, requiring further intervention of
+    a dedicated group of build farm maintainers (occasionally requiring
+    backporting or even authoring patches against the library sources). This is
+    not unique to conda-forge, but a reality for distributions that follow this
+    model, from Debian, Fedora and Ubuntu to Gentoo, vcpkg etc.
 
 ## Problems
 
