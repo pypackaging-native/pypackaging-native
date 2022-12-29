@@ -6,6 +6,7 @@
 |---|---|---|
 | ABI | Application Binary Interface | See [here](./background/binary_interface.md) |
 | API | Application Programming Interface | The sum total of available functions, classes, etc. of a given program |
+| ARM | Advanced RISC Machines | Family of RISC architectures, second-most widely used processor family after x86 |
 | AVX | Advanced Vector eXtensions | Various extensions to the x86 instruction set (AVX, AVX2, AVX512), evolution after SSE |
 | BLAS | Basic Linear Algebra Subprograms | Specification resp. implementation for low-level linear algebra routines |
 | BOLT | Binary Optimization and Layout Tool | See [here](./background/compilation_concepts.md)|
@@ -25,6 +26,7 @@
 | ILP64 | - | Name used for the standard 64-bit interface to BLAS/LAPACK. Also see "(64 bit) Data Models" below |
 | IR | Intermediate Representation | Language-agnostic yet still semantic representation of code within a compiler |
 | LAPACK | Linear Algebra PACKage | Standard software library for numerical linear algebra |
+| ISA | Instruction Set Architecture | Specification of an instruction set for a CPU; e.g. x86-64, arm64, ... |
 | JIT | Just-in-time Compilation | Compiling code just before execution; used in CUDA, pytorch, PyPy, numba etc. |
 | LLVM | - | Cross-platform compiler framework, home of Clang, MLIR, BOLT etc. |
 | LTO | Link-Time Optimization | See [here](./background/compilation_concepts.md)|
@@ -45,6 +47,7 @@
 | PyPy | - | An implementation of the Python specification in (quasi-)Python, with JIT-capabilities |
 | QEMU | Quick EMUlator | Predominant emulation framework on linux |
 | RHEL | Redhat Enterprise Linux | Commercial distribution with some of the longest-running support timelines |
+| RISC | Reduced Instruction Set Computer | Paradigm underlying many past and current CPU architectures |
 | ROCm | Radeon Open Compute | Software stack for AMD GPUs; comparable to CUDA |
 | `sdist` | Source DISTribution | An archive of a Python project that should include everything to build a wheel | See [here](https://setuptools.pypa.io/en/latest/deprecated/distutils/sourcedist.html) |
 | SIMD | Single Instruction, Multiple Data | CPU-specific instructions that can process more data in a single instruction |
@@ -61,6 +64,7 @@
 
 | Term | Explanation | Examples / References |
 |---|---|---|
+| Architecture | In the context of packaging software, this generally refers to the CPU architecture (=ISA) | |
 | ABI Break | Failing to maintain the ABI | See [here](./background/compilation_concepts.md) |
 | Binary Compatibility | Succeeding to maintain the ABI (e.g. across versions / upgrades) | See [here](./background/compilation_concepts.md)|
 | Build Backend | Specifically in the context of `pyproject.toml` builds, the tool responsible for building a Python package | `setuptools`, `flit`, `hatch`, ... |
@@ -80,9 +84,11 @@
 | Mamba | Alternative implementation of the `conda` CLI tool with a faster solver | See [here](https://mamba.readthedocs.io/en/latest/) |
 | Manylinux | Baseline tooling to allow distributing wheels across various Linux distributions | See [PEP 600](https://peps.python.org/pep-0600/) and the PEPs it replaces |
 | `numpy.distutils` | Extension to `distutils`, adding i.a. support for BLAS/LAPACK, Fortran, SIMD etc. | See [here](https://numpy.org/doc/stable/reference/distutils.html) |
+| Platform | Colloquially used as interchangeable with the OS, though really only fully specified by the target triple | |
 | `pyproject.toml` | Build specification for Python packages | See [PEP 517](https://peps.python.org/pep-0517) & [518](https://peps.python.org/pep-0518) |
 | `setuptools` | Most widely used library for building Python packages; new home of `distutils` | See [here](https://setuptools.pypa.io/en/latest/) |
 | Symbol | A compiled version of a function | See [here](./background/compilation_concepts.md) |
 | Tarball | Colloquial name for various flavors of `.tar` archive files | See [here](https://en.wikipedia.org/wiki/Tar_(computing)) |
+| (Target) Triple | Unambiguous specification of the platform for the purpose of (cross-)compiling software for it, usually `<arch>-<vendor>-<OS>` | See [PEP 11](https://peps.python.org/pep-0011/), resp. [here](https://clang.llvm.org/docs/CrossCompilation.html#target-triple) or [here](https://gcc.gnu.org/install/specific.html) |
 | `virtualenv` | Installable module for handling virtual environments; largely a superset of `venv` | See [here](https://virtualenv.pypa.io/en/latest/) |
 | Wheel | A format for distributing and installing binary artefacts for Python packages; essentially a tarball plus metadata | See [here](https://wheel.readthedocs.io/en/latest/) |
