@@ -73,9 +73,9 @@
 | `cargo` | Package manager for the Rust language, often upheld as a positive example for installation UX | See [here](https://doc.rust-lang.org/cargo/) |
 | Conda | Cross-platform package & environment manager, based on distribution channels separate from PyPI | See [here](https://docs.conda.io/) |
 | Conda-forge | Community-led packaging effort for (predominantly) Python packages | See [here](https://conda-forge.org/) |
-| Cross-compilation | Compiling _on_ a given CPU architecture _for_  another CPU architecture | See [here](./background/compilation_concepts.md) |
+| Cross-compilation | Compiling _on_ a given platform _for_  another platform | See [here](./background/compilation_concepts.md) |
 | (64 bit) Data Models | Choice of bit-widths for `int`/`long` integer types | ILP32, ILP64, LP64; see [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models) |
-| Distribution | An entity distributing (consistent) binary artefacts, often for a given platform | CentOS, Debian, Fedora, Ubuntu, RHEL...</br>Chocolatey, Conda, Spack, ... |
+| Distribution | An entity distributing (consistent) binary artefacts, often forming its own ecosystem | Incl. OS: Debian, Fedora, Ubuntu, RHEL...</br>OS-less: Chocolatey, Conda, Spack, ... |
 | `distutils` | Python standard library module for building and installing packages; added in 1.6, to be removed in 3.12 | See [here](https://docs.python.org/3/library/distutils.html) |
 | `easy_install` | Deprecated method for installing Python packages, superseded by `pip install` | See [here](https://setuptools.pypa.io/en/latest/deprecated/easy_install.html) |
 | Egg | Historical format for distributing Python packages | See [here](https://setuptools.pypa.io/en/latest/deprecated/python_eggs.html) |
