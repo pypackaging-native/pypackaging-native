@@ -2,10 +2,11 @@
 
 ## Acronyms
 
-| Acronym | Explanation | References |
+| Acronym | ... stands for | Explanation |
 |---|---|---|
 | ABI | Application Binary Interface | See [here](./background/binary_interface.md) |
 | API | Application Programming Interface | The sum total of available functions, classes, etc. of a given program |
+| AVX | Advanced Vector eXtensions | Various extensions to the x86 instruction set (AVX, AVX2, AVX512), evolution after SSE |
 | BLAS | Basic Linear Algebra Subprograms | Specification resp. implementation for low-level linear algebra routines |
 | BOLT | Binary Optimization and Layout Tool | See [here](./background/compilation_concepts.md)|
 | `cffi` | The C FFI for Python | |
@@ -41,18 +42,19 @@
 | RHEL | Redhat Enterprise Linux | Commercial distribution with some of the longest-running support timelines |
 | ROCm | Radeon Open Compute | Software stack for AMD GPUs; comparable to CUDA |
 | SIMD | Single Instruction, Multiple Data | CPU-specific instructions that can process more data in a single instruction |
+| SSE | Streaming SIMD Extensions | Various extensions to the x86 instruction set (SSE, SSE2, SSE3, SSSE3, SSE4) for SIMD |
 | UCRT | Universal C Runtime | Windows equivalent to glibc/musl | 
 
 ## Terms
 
-| Term | Explanation | Examples |
+| Term | Explanation | Examples / References |
 |---|---|---|
 | ABI Break | Failing to maintain the ABI | See [here](./background/compilation_concepts.md) |
 | Binary Compatibility | Succeeding to maintain the ABI (e.g. across versions / upgrades) | See [here](./background/compilation_concepts.md)|
-| Calling Convention | Agreed-upon contract with describes how to interact with a given CPU (family) | |
+| Calling Convention | Agreed-upon contract with describes how to interact with a given CPU (family) | See [here](https://en.wikipedia.org/wiki/Calling_convention) |
 | Cross-compilation | Compiling _on_ a given CPU architecture _for_  another CPU architecture | See [here](./background/compilation_concepts.md) |
-| (64 bit) Data Models | Choice of bit-widths for `int`/`long` integer types | See [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models) |
+| (64 bit) Data Models | Choice of bit-widths for `int`/`long` integer types | ILP32, ILP64, LP64; see [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models) |
 | Distribution | An entity distributing (consistent) binary artefacts, often for a given platform | CentOS, Debian, Fedora, Ubuntu, RHEL...</br>Chocolatey, Conda, Spack, ... |
-| Emulation | Pretending to run on a different CPU architecture; this can be used to circumvent cross-compilation | |
+| Emulation | Pretending to run on a different CPU architecture; this can be used to avoid cross-compilation | See [here](https://en.wikipedia.org/wiki/Emulator) |
 | Linker | A tool to correctly find the required third-party symbols for a given project | GNU's gold, LLVM's lld, [mold](https://github.com/rui314/mold) |
 | Symbol | A compiled version of a function | See [here](./background/compilation_concepts.md) |
