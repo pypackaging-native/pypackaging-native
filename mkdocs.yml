@@ -47,6 +47,7 @@ nav:
     - 'background/binary_interface.md'
     - 'background/compilation_concepts.md'
   - 'references.md'
+  - 'glossary.md'
 
 plugins:
   - search
