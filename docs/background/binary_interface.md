@@ -76,7 +76,8 @@ extremely hard to debug.
 This is but a trivial example, there are innumerable ways for libraries you
 rely on to break their ABI, including:
 
-- Changing anything about a function signature
+- Changing anything about a function signature (C)
+- Changing the function return type (C++)
 - Changing (almost) anything about templating (C++)
 - Adding a data member or virtual functions to a class
 - Making something inline that previously wasn’t
