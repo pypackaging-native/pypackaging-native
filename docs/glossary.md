@@ -14,6 +14,7 @@
 | CI | Continuous Integration | Testing all changes made to a given software, resp. the infrastructure that makes this possible |
 | CLI | Command Line Interface | |
 | CPU | Central Processing Unit | Main circuitry for executing machine instructions on a computer; contrast GPU |
+| CRAN | Comprehensive R Archive Network | Main index for R language packages, comparable to PyPI |
 | CUDA | Compute Unified Device Architecture | Parallel Computing Framework for NVIDIA GPUs |
 | DRY | Don't Repeat Yourself | Principle in software development aimed at reducing repetition |
 | GCC | GNU Compiler Collection | Main compiler family (for C / C++ / Fortran etc.) on Linux |
