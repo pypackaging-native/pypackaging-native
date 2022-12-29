@@ -10,7 +10,7 @@
 | AVX | Advanced Vector eXtensions | Various extensions to the x86 instruction set (AVX, AVX2, AVX512), evolution after SSE |
 | BLAS | Basic Linear Algebra Subprograms | Specification resp. implementation for low-level linear algebra routines |
 | BOLT | Binary Optimization and Layout Tool | See [here](./background/compilation_concepts.md)|
-| `cffi` | The C FFI for Python | |
+| `cffi` | The C FFI for Python | See [here](https://cffi.readthedocs.io) |
 | CI | Continuous Integration | Testing all changes made to a given software, resp. the infrastructure that makes this possible |
 | CLI | Command Line Interface | |
 | CPU | Central Processing Unit | Main circuitry for executing machine instructions on a computer; contrast GPU |
