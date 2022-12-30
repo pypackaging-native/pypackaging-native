@@ -77,7 +77,7 @@ code.
     compatible package combinations for a given environment.
 
     Due to the limitation of only having a single shared library on the path
-    searched by the linker for symbols at runtime (see [here]../background/compilation_concepts.md#linkers)
+    searched by the linker for symbols at runtime (see [here](../background/compilation_concepts.md#linkers)
     for more details), this kind of ecosystem-wide rebuild needs to be done
     relatively quickly. This is because any given package that has a release
     in the meantime can only be compiled for either the old or for the new ABI
@@ -86,8 +86,8 @@ code.
     and _not_ moving the ecosystem as a whole to the new baseline essentially
     means a bifurcation which packages can be co-installed with each other.
 
-    It is indicative of the amount of effort required for the maintenance of
-    such an undertaking to check the permanently ongoing so-called "migrations"
+    For an impression of the amount of effort required for the maintenance of
+    such an undertaking, see for example the permanently ongoing so-called "migrations"
     in conda-forge, e.g. [here](https://conda-forge.org/status/#other_migrations)
     and [here](https://conda-forge.org/status/#closed_migrations). While a lot
     of rebuilds can be automated (requiring infrastructure that is maintained
@@ -98,6 +98,7 @@ code.
     backporting or even authoring patches against the library sources). This is
     not unique to conda-forge, but a reality for distributions that follow this
     model, from Debian, Fedora and Ubuntu to Gentoo, vcpkg etc.
+
 
 ## Problems
 
