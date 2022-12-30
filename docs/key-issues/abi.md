@@ -36,6 +36,8 @@ debug build of CPython is not ABI-compatible with a release build, hence if one
 wants to use a debug Python, one has to rebuild every package that uses the
 Python C API.
 
+For some more background on ABI, see [here](../background/binary_interface.md).
+
 
 ## Current state
 
