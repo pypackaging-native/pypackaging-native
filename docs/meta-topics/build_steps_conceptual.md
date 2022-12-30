@@ -128,7 +128,7 @@ build system, the dependency can then be used:
 !!! important
 
     There are quite a few build systems and even more different package
-    managers. These can be mixed and matched[^1] - each build system can be
+    managers. These can be mixed and matched[^1] [^2] - each build system can be
     used in any package manager.
 
 [^1]:
@@ -139,6 +139,10 @@ build system, the dependency can then be used:
     package managers (e.g., TensorFlow is built with Bazel and distributed as
     wheels and conda packages) - but that is typically challenging. We won't
     consider that further here.
+
+[^2]:
+    This is not true for the packages/libraries themselves though, which in the
+    vast majority of cases have only a single build system. Exceptions include: TODO SCIPY PYTORCH
 
 
 ### Types of package managers
@@ -254,11 +258,11 @@ configuration files. So:
 
 This definition is probably the most commonly used one across technologies and
 language ecosystems, and can be applied irrespective of whether or not a
-package contains native code[^2] , or whether or not the build system invokes a
+package contains native code[^3] , or whether or not the build system invokes a
 compiler directly or via a backend (e.g. CMake and Meson may use Ninja for
 that).
 
-[^2]:
+[^3]:
     Note that in very simple pure Python cases, the "build configuration" may
     be no more than static metadata that is all contained in
     `[tool.build-system-name]` table in `pyproject.toml`.
@@ -298,12 +302,12 @@ most important thing about wheels are the specifications around how the
 binaries inside them should be built and on what systems they are expected to
 work. In terms of the build process itself, what the build system does is by
 far the most time-consuming and complex part of producing a binary. A build
-frontend only has set up a clean build environment[^3] and to invoke a backend,
+frontend only has set up a clean build environment[^4] and to invoke a backend,
 passing along CLI options if given. A build backend is a thin layer, whose main
 purpose is to invoke the build system, and then add the relevant metadata to
 the final wheel.
 
-[^3]:
+[^4]:
 
     Often a build frontend does *not* have to set up a build environment. By
     default `pip` and `pypa/build` do set one up, but disabling build isolation
