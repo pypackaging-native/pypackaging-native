@@ -12,7 +12,7 @@ of today. With both AMD and Intel releasing GPUs and other programming
 languages for them ([ROCm](https://en.wikipedia.org/wiki/ROCm),
 [SYCL](https://en.wikipedia.org/wiki/SYCL),
 [OpenCL](https://en.wikipedia.org/wiki/OpenCL)), the landscape may become more diverse in the future.
-In addtion, Google provides
+In addition, Google provides
 [Tensor Processing Units](https://en.wikipedia.org/wiki/Tensor_Processing_Unit)
 access in Google Cloud Platform, and a host of startups are developing custom
 accelerator hardware for high-performance computing applications.
@@ -138,7 +138,7 @@ Maintainer effort:
 - Hosting your own wheelhouse to support multiple CUDA or ROCm versions is a
   lot of work,
 - Depending on another GPU package is difficult, and likely requires a `==` pin,
-- A dependendency on CUDA, ROCm, or a specific version of them cannot be
+- A dependency on CUDA, ROCm, or a specific version of them cannot be
   expressed in metadata, hence maintaining build environments is more
   error-prone than it has to be.
 
@@ -154,7 +154,7 @@ For PyPI itself:
 
 Support for GPUs and CUDA has been discussed on and off on distutils-sig and the Packaging Discourse:
 
-- [Environment markers for GPU/CUDA availibility](https://mail.python.org/archives/list/distutils-sig@python.org/thread/LXLF4YSC4WUZOYRX65DW7CESIX7UUBK5/#LXLF4YSC4WUZOYRX65DW7CESIX7UUBK5)
+- [Environment markers for GPU/CUDA availability](https://mail.python.org/archives/list/distutils-sig@python.org/thread/LXLF4YSC4WUZOYRX65DW7CESIX7UUBK5/#LXLF4YSC4WUZOYRX65DW7CESIX7UUBK5)
   thread on distutils-sig (2018),
 - [The next manylinux specification](https://discuss.python.org/t/the-next-manylinux-specification/1043/42?u=rgommers)
   thread on Discourse (2019), with a specific comment about presence/absence of

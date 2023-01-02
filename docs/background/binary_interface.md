@@ -20,7 +20,7 @@ compiled from C/C++. The concepts are the same in all cases though, so for
 brevity, we restrict ourselves to these languages here.
 
 A key focus for binary packaging systems is _maintaining binary compatibility_.
-If the packagers are not successful in maintaining that compability, we then get
+If the packagers are not successful in maintaining that compatibility, we then get
 an _ABI break_, which can lead to crashes, segfaults, corrupted data etc.
 Unsurprisingly, a lot of effort goes into avoiding them.
 
@@ -87,7 +87,7 @@ rely on to break their ABI, including:
 
 ## Interaction with shared libraries
 
-What the above means is that, bascially, you can never change anything about a
+What the above means is that, basically, you can never change anything about a
 C symbol that has been distributed to consumers in binary form, especially those
 in shared libraries. Since some code effectively must use shared libraries
 (not least the C standard library, in the form of glibc/[musl](https://musl.libc.org)

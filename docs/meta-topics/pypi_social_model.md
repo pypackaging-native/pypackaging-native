@@ -71,8 +71,8 @@ model are all related to binaries:
     - about runtimes that should be unique in an environment (e.g., see the
       [content about OpenMP](../key-issues/native-dependencies/blas_openmp.md)).
 
-- The ability to do *sytem integration and integration testing* is very
-  limited. With PyPI, there is a limited amout of integration testing that
+- The ability to do *system integration and integration testing* is very
+  limited. With PyPI, there is a limited amount of integration testing that
   package authors do in an ad-hoc fashion (e.g., downstream package authors may
   test pre-releases). For everything else, the user is the integrator.
 - The *requirement to avoid external dependencies* through vendoring or static
