@@ -7,7 +7,7 @@
     really vast field (even just for C/C++).
 
     Needless to say, adequately summarizing decades of work and developments
-    that have lead us to where we are now is not easy. If you find errors or
+    that have led us to where we are now is not easy. If you find errors or
     things to improve, please open an issue or PR!
 
 In order to get a computer to execute a given unit of work (say, application `X`
@@ -19,7 +19,7 @@ preconditions have to be met:
 - The symbol for `f` needs to be named (resp. "mangled") in a consistent manner
   between the compilation of the current code (for `X`), resp. the compilation
   of the library (`libfoo`, which contains the symbol for `f`).
-- The symbol for `f` needs to have be discoverable from within the currently
+- The symbol for `f` needs to be discoverable from within the currently
   running process; assuming `libfoo` is available on the machine where we are
   compiling, this is ensured by the _linker_.
 - Variables passed to the function need to be loaded into the right CPU
@@ -90,7 +90,7 @@ int square(T num) {
     return num * num;
 }
 ```
-allows us to call `square` with all kinds of integer, floats, etc. The compiler
+allows us to call `square` with all kinds of integers, floats, etc. The compiler
 will keep track of which flavor of the function has been used in the program
 and generate the respective symbols for each one of them. In order to
 distinguish these symbols, they get names that look like gibberish, but really
