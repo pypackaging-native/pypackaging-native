@@ -58,7 +58,7 @@ configuration.
     Finally, a number of native libraries (Boost, ARPACK, HiGHS, etc.) are
     vendored into SciPy. Unvendoring those (something system packagers would
     like) has been deemed infeasible[^2], those dependencies would also not be
-    expressable and therefore make the build more fragile.
+    expressible and therefore make the build more fragile.
 
 [^2]:
     With Meson as the new build system for SciPy, it is becoming possible to

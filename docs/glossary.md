@@ -21,7 +21,7 @@
 | GUI | Graphical UI | |
 | GNU | GNU's Not Unix | Collection of free software packages under GPL License |
 | GPL | (GNU) General Public License | Foundational "copyleft" license of the free software movement |
-| glibc | GNU C Library | Widely used implemetation of the C standard library |
+| glibc | GNU C Library | Widely used implementation of the C standard library |
 | FFI | Foreign Function Interface | Calling functions written in a different language than the one currently used |
 | GPU | Graphics Processing Unit | Specialized circuitry for quickly computing graphics-related tasks |
 | ILP64 | - | Name used for the standard 64-bit interface to BLAS/LAPACK. Also see "(64 bit) Data Models" below |
@@ -43,7 +43,7 @@
 | `pip` | Pip Installs Packages | Default installer for Python packages, distributed with CPython itself; see [here](https://pip.pypa.io/en/stable/) |
 | PGO | Profile-Guided Optimization | See [here](./background/compilation_concepts.md#profile-guided-optimization-pgo)|
 | PSF | Python Software Foundation | See [here](https://www.python.org/psf-landing/) |
-| PyPA | Python Packaging Authorithy | Group which maintains core set of projects in Python packaging |
+| PyPA | Python Packaging Authority | Group which maintains core set of projects in Python packaging |
 | PyPI | Python Package Index | Main index where packages get installed from |
 | PyPy | - | An implementation of the Python specification in (quasi-)Python, with JIT capabilities |
 | QEMU | Quick EMUlator | Predominant emulation framework on Linux |
