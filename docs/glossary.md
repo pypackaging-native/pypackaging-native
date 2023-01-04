@@ -76,7 +76,7 @@
 | Conda-forge | Community-led packaging effort for (predominantly) Python packages | See [here](https://conda-forge.org/) |
 | Cross-compilation | Compiling _on_ a given platform _for_  another platform | See [here](./background/compilation_concepts.md#cross-compilation) |
 | (64 bit) Data Models | Choice of bit-widths for `int`/`long` integer types | ILP32, ILP64, LP64; see [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models) |
-| Distribution | An entity distributing (consistent) binary artefacts, often forming its own ecosystem | Incl. OS: Debian, Fedora, Ubuntu, RHEL...</br>OS-less: Chocolatey, Conda, Spack, ... |
+| Distribution | An entity distributing (consistent) binary artefacts, often forming its own ecosystem | Incl. OS: Debian, Fedora, Ubuntu, RHEL...</br>OS-less: Conda, Spack, Homebrew, ... |
 | `distutils` | Python standard library module for building and installing packages; added in 1.6, to be removed in 3.12 | See [here](https://docs.python.org/3/library/distutils.html) |
 | `easy_install` | Deprecated method for installing Python packages, superseded by `pip install` | See [here](https://setuptools.pypa.io/en/latest/deprecated/easy_install.html) |
 | Egg | Historical format for distributing Python packages | See [here](https://setuptools.pypa.io/en/latest/deprecated/python_eggs.html) |

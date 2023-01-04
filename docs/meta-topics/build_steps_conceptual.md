@@ -157,7 +157,7 @@ to distinguish two different types of package managers.
 - Multi-language
 - Single-platform (often, not always)
 - *Examples: Linux package managers (APT, RPM, Pacman, YUM, etc.), Homebrew,
-  Nix, Guix, Chocolatey*
+  Nix, Guix*
 
 (B) *Dependency package managers*:
 
@@ -191,6 +191,10 @@ and some don't quite fit. A few of the most prominent examples:
   system (with a binary cache system), and (b) it treats compilers differently;
   they can come from the system, but Spack does know about them and allows
   using multiple compilers in a controlled fashion.
+- Chocolatey provides some system-like packages like compilers (Clang, Mingw),
+  Microsoft Visual C++ Redistributable's and Python interpreters - but its
+  packages are mostly self-contained and it only handles a few dependencies
+  in a minimal fashion.
 
 ??? question "What about PDM, Hatch, Pipenv, Nox, Tox & co.?"
 
