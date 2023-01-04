@@ -103,8 +103,10 @@ TODO
    [pypa/pip#9140](https://github.com/pypa/pip/issues/9140).
    Also note that it's recommended to upload wheels even for projects that are
    pure Python, because installs are faster (metadata in a wheel is static, no
-   need to run `setup.py) - TODO: find reference (e.g. podcast Brett Cannon).
-   There are very few packages which would be unable to upload a wheel.
+   need to run `setup.py - see
+   [this blog post](https://pradyunsg.me/blog/2022/12/31/wheels-are-faster-pure-python/)
+   for a more detailed explanation). There are very few packages which would be
+   unable to upload a wheel.
 3. Let individual packages determine the behavior of installers (try to install
    from sdist, or error out) via metadata on PyPI somehow.
 4. Individual solutions for some of the separate issues. For example, reduce
