@@ -39,12 +39,12 @@
 - [Ralf Gommers - Python packaging in 2021 - pain points and bright spots (2021)](https://labs.quansight.org/blog/2021/01/python-packaging-brainstorm/)
 
 
-## General packaging core concepts
+## General Python packaging content
 
-- [Python Packaging Authority - Python Packaging User Guide (2010)](https://packaging.python.org/)
-- [Naomi Ceder, for Manning Books - The Quick Python Book, 3rd edition, Chapter 18 (2018)](https://www.manning.com/books/the-quick-python-book-third-edition)
-- [SciKit-HEP - Packaging (2020)](https://scikit-hep.org/developer/packaging)
-- [Test & Code - Python Packaging - Brett Cannon (2021)](https://podcasts.apple.com/in/podcast/python-packaging-brett-cannon/id1029487211?i=1000520722142)
-- [Tomas Beuzen and Tiffany Timbers - Python Packages (2022)](https://py-pkgs.org/)
-- [Real Python - How to Publish Your Own Python Package to PyPI (2022)](https://realpython.com/pypi-publish-python-package/)
-- [Dane Hillard, for Manning Books - Publishing Python Packages (2022)](https://www.manning.com/books/publishing-python-packages)
+- [Python Packaging Authority - Python Packaging User Guide](https://packaging.python.org/)
+- [SciKit-HEP - Packaging](https://scikit-hep.org/developer/packaging)
+- [Tomas Beuzen and Tiffany Timbers - Python Packages](https://py-pkgs.org/)
+- [Naomi Ceder - The Quick Python Book, 3rd edition, Chapter 18 (2018)](https://www.manning.com/books/the-quick-python-book-third-edition)
+- [Brian Okken - Python Packaging - Brett Cannon (2021)](https://podcasts.apple.com/in/podcast/python-packaging-brett-cannon/id1029487211?i=1000520722142)
+- [Geir Arne Hjelle - How to Publish Your Own Python Package to PyPI (2022)](https://realpython.com/pypi-publish-python-package/)
+- [Dane Hillard - Publishing Python Packages (2022)](https://www.manning.com/books/publishing-python-packages)
