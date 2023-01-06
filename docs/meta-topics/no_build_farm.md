@@ -35,7 +35,7 @@ package should be importable.
 
 ## Current state
 
-This topic has been discussed on and of, however there is no concrete effort
+This topic has been discussed on and off, however there is no concrete effort
 happening in this direction as of Dec 2022.
 
 One early attempt at a solution was

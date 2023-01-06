@@ -93,7 +93,7 @@ thread for some discussion on this.
 If a library provides functionality that is meant to be used from C or C++ code
 in another package, one needs to install headers and libraries. To make that
 work well, those headers and libraries should be installed in a place where
-other tools can find them. There are standard places for thison a system, e.g.
+other tools can find them. There are standard places for this on a system, e.g.
 for a prefix `/usr` the headers may go into `/usr/include/` and the libraries
 in `/usr/lib`. This is *technically* possible with wheels, but recommended
 against because the install process may clobber system files. As a result, what
