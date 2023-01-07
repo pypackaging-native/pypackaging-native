@@ -184,6 +184,46 @@ Linux package managers may do something similar
 or they may use a more a more specific way of managing BLAS and LAPACK, such as
 [Fedora using Flexiblas](https://docs.fedoraproject.org/en-US/packaging-guidelines/BLAS_LAPACK/#_user_level_selection).
 
+??? info "BLAS/LAPACK demuxing[^2]: FlexiBLAS, libblastrampoline & SciPy's `cython_blas`/`cython_lapack`"
+
+    Supporting multiple BLAS and LAPACK libraries is quite challenging,
+    because of API and ABI incompatibilities between them. In particular:
+
+    - API's using 32-bit (LP64) or 64-bit (ILP64) integers as indices of
+      vectors/matrices (see
+      [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)
+      for details). Typically a BLAS/LAPACK library supports both at the
+      source level, and how the library is built determines which one is used.
+      ILP64 builds may or may not use a symbol suffix - `64_` being the common
+      one, but that's not a universal convention.
+    - g77 vs. gfortran ABI. MKL and Apple Accelerate use the g77 ABI (or "f2c
+      calling convention"), while all other common libraries use the gfortran
+      ABI.
+
+    In addition, libraries may implement different versions of the reference Netlib APIs,
+    and CBLAS and LAPACKE support are not universal. To deal with this, a
+    *demuxing library* (or wrapper library) may be a good solution. Its job is to
+    provide a uniform API and ABI to any package using it. There are several
+    examples of this: [FlexiBLAS](https://www.mpi-magdeburg.mpg.de/projects/flexiblas)[^3]
+    is a standalone library to do this at the C/Fortran level,
+    [libblastrampoline](https://github.com/JuliaLinearAlgebra/libblastrampoline)
+    does this for Julia, and SciPy's `scipy.linalg.cython_[blas|lapack]` submodules
+    provide a C/Cython interface to other Python packages.
+
+    If other Python packages can accept a dependency on SciPy, that's their
+    best option. SciPy itself has to deal with the full complexity of
+    discovering and building against arbitrary BLAS/LAPACK libraries.
+
+[^2]:
+    The term demuxing here stands for demultiplexing, in the sense of splitting a single
+    "signal" (e.g. _multiply these two matrices_) into several channels for the various
+    supported implementations of BLAS/LAPACK.
+
+[^3]:
+    Note that FlexiBLAS is GPLv3 licensed, with a LGPL-like runtime exception that only
+    covers the Netlib-equivalent part of its API (that may not be enough, see
+    [scipy#17362](https://github.com/scipy/scipy/issues/17362)).
+
 
 ## Problems
 
