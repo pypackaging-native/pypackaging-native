@@ -112,15 +112,25 @@ tend to be forks by a third party rather than packages created by the original
 development team.
 
 Distributing binaries with SIMD instructions is not something many other packaging
-systems have an answer for. The exception is Spack, which has builtin capabilities
-through [`archspec`](https://github.com/archspec/archspec) for installing
-optimized binaries. This will even be surfaced in its resolver; individual
-package entries will contain a tag like `-skylake_avx512` (microarchitecture +
-highest supported instruction set). The
+systems have an answer for. Exceptions are Spack and Julia's
+[Pkg.jl](https://github.com/JuliaLang/Pkg.jl/)[^1]. Spack has builtin
+capabilities through [`archspec`](https://github.com/archspec/archspec) for
+installing optimized binaries. This will even be surfaced in its resolver;
+individual package entries will contain a tag like `-skylake_avx512`
+(microarchitecture + highest supported instruction set). The
 [`archspec` paper](https://tgamblin.github.io/pubs/archspec-canopie-hpc-2020.pdf)
 is worth reading for a thorough discussion of the design aspects of integrating
 support for SIMD instructions, and dealing with CPU compatibility in a
-packaging system in a more granular fashion.
+packaging system in a more granular fashion. `Pkg.jl` can serve binaries for
+Julia packages optimized for the user's CPU architecture - see for example
+[finufft_jll.jl](https://github.com/JuliaBinaryWrappers/finufft_jll.jl) and
+the listed binaries in its README (e.g. `Windows x86_64 {cxxstring_abi=cxx11, march=avx}`
+and `march=avx2`, `march=avx512` variants).
+
+[^1]:
+    The capabilities of Julia's package manager aren't directly relevant to
+    Python users, however it's still instructive to see a language-specific
+    package manager that is SIMD-aware.
 
 
 ## Problems
