@@ -213,4 +213,12 @@ Some threads on language-specific vs. system package managers:
   community of where the author-led social model really breaks down and the
   effort of distributing wheels is prohibitive (e.g.,
   [the geospatial stack](../key-issues/native-dependencies/geospatial_stack.md)).
+- Having draft releases on PyPI (see
+  [pypi/warehouse#726](https://github.com/pypi/warehouse/issues/726)) would be a
+  step in the right direction[^5] towards addressing the "coordination across
+  projects" problem.
 
+[^5]:
+    Note though that the coordination across projects problem is mostly a
+    social issue - who can decide on and enforce standard ways of doing things
+    - rather than a PyPI infrastructure one.
