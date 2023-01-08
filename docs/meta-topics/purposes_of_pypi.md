@@ -158,8 +158,9 @@ difficult to build from source.
 
 ## Relevant resources
 
-- [Twitter thread (2021 - Steve Dower, Juan Luis Cano Rodríguez, Ralf Gommers)](https://twitter.com/zooba/status/1415440484181417998)
-  about pros/cons and importance of uploading sdist's to PyPI.
+- [Twitter thread (2021 - Steve Dower, Juan Luis Cano Rodríguez, Ralf Gommers)](../assets/images/pypi-sdist-twitter-thread.png)
+  about pros/cons and importance of uploading sdist's to PyPI (the link is a
+  screenshot from the original [Twitter thread](https://twitter.com/zooba/status/1415440484181417998)).
 
 
 ## Potential solutions or mitigations
