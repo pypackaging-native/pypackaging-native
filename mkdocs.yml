@@ -20,7 +20,7 @@ theme:
     - scheme: default
       primary: blue grey
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Switch to dark mode
 
 nav:
@@ -42,6 +42,8 @@ nav:
     - 'key-issues/pypi_metadata_handling.md'
     - 'key-issues/simd_support.md'
     - 'key-issues/unexpected_fromsource_builds.md'
+    - 'key-issues/multiple_architectures.md'
+    - 'key-issues/cross_platform.md'
   - 'other_issues.md'
   - 'Background':
     - 'background/binary_interface.md'
