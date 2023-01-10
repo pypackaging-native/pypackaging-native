@@ -14,6 +14,8 @@ However, on occasion, we see an operating system platform where multiple CPU
 architectures are supported:
 
 * In the early days of Windows NT, both x86 and DEC Alpha CPUs were supported
+* Windows 10 supports x86, x86-64, ARMv7 and ARM64; Windows 11 supports x86-64
+  and ARM64.
 * Although Linux started as an x86 project, the Linux kernel is now available a
   wide range of other CPU architectures, including ARM64, RISC-V, PowerPC, s390
   and more.
