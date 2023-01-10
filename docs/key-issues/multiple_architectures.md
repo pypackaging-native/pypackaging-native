@@ -62,6 +62,15 @@ with the same library name. This yields an independent final binary (APK) for
 each CPU architecture. When running locally, a CPU-specific APK will be
 uploaded to the simulator or test device.
 
+This approach can be supported with a conventional "single platform wheel"
+approach. A library developer can package a wheel for each Android CPU
+architecture they wish to support; the Android project will install a
+CPU-architecture appropriate wheel when the compiler pass for that archictecture
+is performed. The only complication is that process of installing wheels will
+involve a dependency resolution pass on each supported platform; this could
+potentially lead to a situation where a single application has different
+versions of a Python library on different architectures.
+
 To simplify the process of distributing the application, at time of publication,
 a single Android App Bundle (AAB) is generated from the multiple CPU-specific
 APKs. This AAB contains binaries for all platforms that can be uploaded to an
@@ -124,8 +133,14 @@ wheel can declare compatibility with multiple CPython versions (e.g.,
 `cp310-abi3-macosx_10_9_universal2` would be equivalent to
 `cp310-abi3-macosx_10_9_x86_64.arm64`.
 
-To support Android's multi-architecture approach, it may be necessary to extend
-installation tools to allow for installing multiple versions of a wheel in one
-installation pass. This can be emulated by making multiple independent calls to
-to package installer tools; but that results in independent dependency
-resolution, etc.
+Supporting Android's archiving approach requires no particular modifications to
+the "single architecture" solutions in use today. However, there may be a
+benefit to the developer experience if it is possible to ensure consistency
+in the dependency resolution solutions that are found for each architecture.
+The could come in the form of:
+1. Allowing for the installation of multiple wheel architectures in a single
+   installation pass.
+2. Sharing dependency resolution solutions between installation passes.
+3. Tools to identify when two different install passes have generated different
+   dependency solutions.
+4. A "multi-architecture" Android wheel.
