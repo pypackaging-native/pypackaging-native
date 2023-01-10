@@ -12,13 +12,20 @@ on device. Therefore, it must be possible to build a binary artefact for a CPU
 architecture and a ABI that is different the platform that is running the
 compiler.
 
-A microcosm of this problem exists on macOS as a result of the Apple Silicon
-transition. Most CI systems don't provide native ARM hardware, but most
-developers will still want ARM64-compatible build artefacts. Apple has provided
-the tools compile [fat binaries](multiple_architectures.md) on x86_64 hardware;
-however, in this case, the host platform (macOS on x86_64) will still be one of
-the outputs of the compilation process. For mobile platforms, the computer that
-compiles the code will not be able to execute the code that has been compiled.
+Cross compilation issues also emerge when dealing with continuous
+integration/deployment (CI/CD). CI/CD platforms (such as Github Actions)
+generally provide the "common" architectures - often only x86-64 - however, a
+project may want to produce binaries for other platforms (e.g., ARM support for
+Raspberry Pi devices; PowerPC or s390 for mainframe/server devices; or for
+mobile platforms). These binaries won't run natively on the host CI/CD system
+(without some sort of emulation); but code can be compiled for the target
+platform.
+
+macOS also experiences this as a result of the Apple Silicon transition. Apple
+has provided the tools to compile [fat binaries](multiple_architectures.md) on
+x86_64 hardware; however, in this case, the host platform (macOS on x86_64) will
+still be one of the outputs of the compilation process, and the resulting binary
+will run on the CI/CD system.
 
 ## Potential solutions or mitigations
 
