@@ -37,4 +37,4 @@ In the Python space, tools like [crossenv](https://github.com/benfogle/crossenv)
 also exist; these tools use a collection of path hacks and overrides of known
 sources of platform-specific details (like `distutils`) to provide a
 cross-compilation environment. However, these solutions tend to be somewhat
-fragile as aren't first-class citizens of the Python ecosystem.
+fragile as they aren't first-class citizens of the Python ecosystem.
