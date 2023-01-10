@@ -133,6 +133,17 @@ wheel can declare compatibility with multiple CPython versions (e.g.,
 `cp310-abi3-macosx_10_9_universal2` would be equivalent to
 `cp310-abi3-macosx_10_9_x86_64.arm64`.
 
+Alternatively, this could be solved as an install-time problem. In this
+approach, package repositories would continue to store single-architecture,
+single-ABI artefacts; however, at time of installation, the installation tool
+would allow for the specification of multiple architectures/ABI combinations.
+The installer would download a wheel for each architecture/ABI requested, and as
+a post-processing step, merge the binaries for multiple architectures into a
+single fat binary for each ABI. This would simplify the story from the package
+archive's perspective, but would require significant modifications to installer
+tooling (some of which would require callouts to platform-specfic build
+tooling).
+
 Supporting Android's archiving approach requires no particular modifications to
 the "single architecture" solutions in use today. However, there may be a
 benefit to the developer experience if it is possible to ensure consistency
