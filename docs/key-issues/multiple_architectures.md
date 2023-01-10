@@ -106,13 +106,13 @@ libraries that need to span multiple ABIs. When developing an application for
 iOS, a developer will need to install binaries for both the simulator and
 physical devices.
 
-## Potential solutions or mitigations
-
 Python currently provides `universal2` wheels to support x86_64 and ARM64 in a
 single wheel. This is effectively a "fat wheel" format; the `.dylib` files
 contained in the wheel are fat binaries containing both x86_64 and ARM64 slices.
 
-However, "Universal2" is a macOS-specific definition that encompasses the scope
+## Potential solutions or mitigations
+
+"Universal2" is a macOS-specific definition that encompasses the scope
 of the specific "Apple Silicon" transition ("Universal" wheels also existed
 historically for the PowerPC to Intel transition). Even inside the Apple
 ecosystem, iOS, tvOS, and watchOS all have different combinations of supported
