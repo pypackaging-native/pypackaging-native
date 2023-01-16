@@ -36,7 +36,7 @@ CPU architecture, that doesn't guarantee [ABI compatibility](abi.md).
 
 In some respects, CPU architecture compatibility could be considered a superset
 of [GPU compatibility](gpus.md). When dealing with multiple CPU architectures,
-there may be some overal with the solutions that can be used to support GPUs in
+there may be some overlap with the solutions that can be used to support GPUs in
 native binaries.
 
 Three approaches have emerged on operating systmes that have a need to manage
@@ -55,7 +55,7 @@ The approach taken by Android is very similar to the multiple binary approach,
 with some affordances and tooling to simplify distribution.
 
 By default Android projects use Java/Kotlin, which produces platform independent
-code. However, it is possible to use non Java/Kotlin libraries by using JNI and
+code. However, it is possible to use non-Java/Kotlin libraries by using JNI and
 the Android NDK (Native Development Kit). If a project contains native code, a
 separate compilation pass is performed for each architecture.
 
@@ -66,7 +66,7 @@ library name.
 
 The final binary artefact produced for Android distrobution uses this same
 directory convention. A "binary" on Android is an APK (Android Application
-Package) bundle; this is effectibely a ZIP file with known metadata and
+Package) bundle; this is effectively a ZIP file with known metadata and
 structure; internally, there are subfolders for each supported CPU architecture.
 This APK is bundled into AAB (Android Application Bundle) format for upload to
 an app store; at time of installation, a CPU-specific APK is generated and
@@ -120,7 +120,7 @@ solution. This serves the needs of Windows and Linux well, as it matches the
 way end-users interact with binaries.
 
 The `universal2` "fat wheel" solution also works well for macOS. The definition
-of `universal2` is a hard-coded accomodation for one specific (albiet common)
+of `universal2` is a hard-coded accomodation for one specific (albeit common)
 multi-architecture configuration, and involves a number of specific
 accomodations in the Python ecosystem (e.g., a macOS-specific architecture
 lookup scheme).

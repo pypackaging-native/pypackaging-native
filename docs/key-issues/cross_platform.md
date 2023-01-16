@@ -30,8 +30,8 @@ will run on the CI/CD system.
 ## Current state
 
 Native compiler and build toolchains (e.g., autoconf/automake, CMake) have long
-supported cross-compilation; however, these cross-compilation capabilities are
-easy to break unless they are exercised regularly.
+supported cross-compilation; however, such cross-compilation capabilities for any
+given project tend to bitrot and break easily unless they are exercised regularly.
 
 CPython's build system includes some support for cross-compilation. This support
 is largely based on leveraging autoconf's support for cross compilation. This
@@ -44,8 +44,8 @@ largely converted into a concern for individual build systems to manage.
 
 ## Problems
 
-There is currently a small gap in communicating target platform details to the
-build system. While a build system like autoconf or Cmake may support
+There is currently a gap in communicating target platform details to the
+build system. While a build system like autoconf or CMake may support
 cross-platform compilation, and a project may be able to cross-compile binary
 artefacts, invocation of the PEP517 build interface currently assumes that the
 platform running the build will be the platform that ultimately runs the Python
