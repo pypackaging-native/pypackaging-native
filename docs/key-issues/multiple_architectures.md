@@ -4,14 +4,16 @@ In addition to any ABI requirements, a binary is compiled for a CPU
 architecture. That CPU architecture defines the CPU instructions that can be
 issued by the binary.
 
+## Current state
+
 Historically, it could be assumed that an executable or library would be
 compiled for a single CPU archicture. On the rare occasion that an operating
 system was available for mulitple CPU architectures, it became the
 responsibility of the user to find (or compile) a binary that was compiled for
 their host CPU architecture.
 
-However, on occasion, we see an operating system platform where multiple CPU
-architectures are supported:
+However, we now see operating system platforms where multiple CPU architectures
+are supported:
 
 * In the early days of Windows NT, both x86 and DEC Alpha CPUs were supported
 * Windows 10 supports x86, x86-64, ARMv7 and ARM64; Windows 11 supports x86-64
@@ -37,47 +39,38 @@ of [GPU compatibility](gpus.md). When dealing with multiple CPU architectures,
 there may be some overal with the solutions that can be used to support GPUs in
 native binaries.
 
-## Platform approaches for dealing with multiple architectures
-
-Three approaches have emerged for handling multiple CPU architectures.
+Three approaches have emerged on operating systmes that have a need to manage
+multiple CPU architectures:
 
 ### Multiple binaries
 
 The minimal solution is to distribute multiple binaries. This is the approach
-that was used by Windows NT, and is currently supported by Linux. At time of
-distribution, an installer or other downloadable artefact is provided for each
-supported platform, and it is up to the user to select and download the correct
-artefact.
+that is by Windows and Linux. At time of distribution, an installer or other
+downloadable artefact is provided for each supported platform, and it is up to
+the user to select and download the correct artefact.
 
 ### Archiving
 
 The approach taken by Android is very similar to the multiple binary approach,
 with some affordances and tooling to simplify distribution.
 
-When building an Android project, each target architecture is compiled
-independently. If a native binary library is required to compile the Android
-application, a version must be provided for each supported CPU architecture. A
-directory layout convention exists for providing a binary for each platform,
-with the same library name. This yields an independent final binary (APK) for
-each CPU architecture. When running locally, a CPU-specific APK will be
-uploaded to the simulator or test device.
+By default Android projects use Java/Kotlin, which produces platform independent
+code. However, it is possible to use non Java/Kotlin libraries by using JNI and
+the Android NDK (Native Development Kit). If a project contains native code, a
+separate compilation pass is performed for each architecture.
 
-This approach can be supported with a conventional "single platform wheel"
-approach. A library developer can package a wheel for each Android CPU
-architecture they wish to support; the Android project will install a
-CPU-architecture appropriate wheel when the compiler pass for that archictecture
-is performed. The only complication is that process of installing wheels will
-involve a dependency resolution pass on each supported platform; this could
-potentially lead to a situation where a single application has different
-versions of a Python library on different architectures.
+If a native binary library is required to compile the Android application, a
+version must be provided for each supported CPU architecture. A directory layout
+convention exists for providing a binary for each platform, with the same
+library name.
 
-To simplify the process of distributing the application, at time of publication,
-a single Android App Bundle (AAB) is generated from the multiple CPU-specific
-APKs. This AAB contains binaries for all platforms that can be uploaded to an
-app store.
-
-When an end-user requests the installation of an app, the app store strips out the
-binary that is appropriate for the end-user's device.
+The final binary artefact produced for Android distrobution uses this same
+directory convention. A "binary" on Android is an APK (Android Application
+Package) bundle; this is effectibely a ZIP file with known metadata and
+structure; internally, there are subfolders for each supported CPU architecture.
+This APK is bundled into AAB (Android Application Bundle) format for upload to
+an app store; at time of installation, a CPU-specific APK is generated and
+provided to the end-user for installation.
 
 ### Fat binaries
 
@@ -105,6 +98,11 @@ ARM64 binary. Complications can occur when only *some* of the binary is being
 converted (e.g., if the binary being executed is fat, but a dynamic library
 isn't).
 
+To support the transition to Apple Silicon/M1 (ARM64), Python has introduced a
+`universal2` architecture target to support . This is effectively a "fat wheel"
+format; the `.dylib` files contained in the wheel are fat binaries containing
+both x86_64 and ARM64 slices.
+
 iOS has an additional complication of requiring support for mutiple *ABIs* in
 addition to multiple CPU archiectures. The ABI for the iOS simulator and
 physical iOS devices are different; however, ARM64 is a supported CPU
@@ -115,43 +113,147 @@ libraries that need to span multiple ABIs. When developing an application for
 iOS, a developer will need to install binaries for both the simulator and
 physical devices.
 
-Python currently provides `universal2` wheels to support x86_64 and ARM64 in a
-single wheel. This is effectively a "fat wheel" format; the `.dylib` files
-contained in the wheel are fat binaries containing both x86_64 and ARM64 slices.
+## Problems
+
+At present, the Python ecosystem almost exclusively uses the "multiple binary"
+solution. This serves the needs of Windows and Linux well, as it matches the
+way end-users interact with binaries.
+
+The `universal2` "fat wheel" solution also works well for macOS. The definition
+of `universal2` is a hard-coded accomodation for one specific (albiet common)
+multi-architecture configuration, and involves a number of specific
+accomodations in the Python ecosystem (e.g., a macOS-specific architecture
+lookup scheme).
+
+Supporting iOS requires supporting between 2 and 5 architectures (x86_64 and
+ARM64 at the minimum), and at least 2 ABIs - the iOS simulator and iOS device
+have different (and incompatible) binary ABIs. At runtime, iOS expects to find a
+single "fat" binary for any given ABI. iOS effectively requires an analog of
+`universal2` covering the 2 ABIs and multiple architectures. However:
+
+1. The Python ecosystem does not provide an extension mechanism that would allow
+   platforms to define and utilize multi-architecture build artefacts.
+
+2. The rate of change of CPU architectures in the iOS ecosystem is more rapid
+   than that seen on desktop platforms; any potential "universal iOS" target
+   would need to be updated or versioned regularly. A single named target would
+   also force developers into supporting older devices that they may not want to
+   support.
+
+Supporting Android also requires the support of between 2 and 4 architectures
+(depending on the range of development and end-user configurations the app needs
+to support). Android's archiving-based approach can be mapped onto the "multiple
+binary" approach, as it is possible to build a single archive from multiple
+individual binaries. However, some coordination is required when installing
+multiple binaries. If an independent install pass (e.g., call to `pip`) is used
+for each architecture, the dependency resolution process for each platform will
+also be independent; if there are any discrepancies in the specific versions
+available for each architecture (or any ordering instabilities in the dependency
+resolution algorithm), it is possible to end up with different versions on each
+platform. Some coordination between per-architecture passes is therefore
+required.
+
+## History
+
+[The BeeWare Project](https://beeware.org) provides support for building both
+iOS and Android binaries. On both platforms, BeeWare provides a custom package
+index that contains pre-compiled binaries
+([Android](https://chaquo.com/pypi-7.0/);
+[iOS](https://anaconda.org/beeware/repo)). These binaries are produced using a
+forge-like set of tooling
+([Android](https://github.com/chaquo/chaquopy/tree/master/server/pypi);
+[iOS](https://github.com/freakboy3742/chaquopy/tree/iOS-support/server/pypi))
+that patches the build systems for the most common Python binary dependencies;
+and on iOS, manages the process of merging single-architecture, single ABI
+wheels into a fat wheel.
+
+On iOS, BeeWare-supplied iOS binary packages provide a single "iPhone" wheel.
+This wheel includes 2 binary libraries (one for the iPhone device ABI, and one
+for the iPhone Simulator ABI); the iPhone simulator binary includes x86_64 and
+ARM64 slices. This is effectively the "universal-iphone" approach, encoding a
+specific combination of ABIs and architectures.
+
+BeeWare's support for Android uses [Chaquopy](https://chaquo.com/chaquopy) as a
+base. Chaquopy's binary artefact repository stores a single binary wheel for
+each platform; it also contains a wrapper around `pip` to manage the
+installation of multiple binaries. When a Python project requests the
+installation of a package:
+
+* Pip is run normally for one binary architecture
+* The `.dist-info` metadata is used to identify the native packages -  both
+  those directly requested by the user, and those installed as indirect
+  requirements by pip
+* The native packages are separated from the pure-Python packages, and pip is
+  then run again for each of the remaining architectures; this time, only those
+  specific native packages are installed, pinned to the same versions that pip
+  selected for the first architecture.
+
+[Kivy](https://kivy.org) also provides support for iOS and Android as deployment
+platforms. However, Kivy doesn't support the use of binary artefacts like wheels
+on those platforms; Kivy's support for binary modules is based on the broader Kivy
+platform including build support for libraries that may be required.
+
+## Relevant resources
+
+To date, there haven't been extensive public discussions about the support of
+iOS or Android binary packages. However, there were discussions around the
+adoption of universal2 for macOS:
+
+* [The CPython discussion about universal2
+  support](https://discuss.python.org/t/apple-silicon-and-packaging/4516)
+* [The addition of universal2 to
+  CPython](https://github.com/python/cpython/pull/22855)
+* [Support in packaging for
+  universal2](https://github.com/pypa/packaging/pull/319), which declares the
+  logic around resolving universal2 to specific platforms.
 
 ## Potential solutions or mitigations
 
-"Universal2" is a macOS-specific definition that encompasses the scope
-of the specific "Apple Silicon" transition ("Universal" wheels also existed
-historically for the PowerPC to Intel transition). Even inside the Apple
-ecosystem, iOS, tvOS, and watchOS all have different combinations of supported
-CPU architectures.
+There are two approaches that could be used to provide a general solution to
+this problem, depending on whether the support of multiple architectures is
+viewed as a distribution or integration problem.
 
-A more general solution for naming multi-architecture binaries, similar to how a
-wheel can declare compatibility with multiple CPython versions (e.g.,
-`cp34.cp35.cp36-abi3-manylinux1_x86_64`) may be called for. In such a scheme,
-`cp310-abi3-macosx_10_9_universal2` would be equivalent to
-`cp310-abi3-macosx_10_9_x86_64.arm64`.
+### Distribution-based solution
 
-Alternatively, this could be solved as an install-time problem. In this
-approach, package repositories would continue to store single-architecture,
-single-ABI artefacts; however, at time of installation, the installation tool
-would allow for the specification of multiple architectures/ABI combinations.
-The installer would download a wheel for each architecture/ABI requested, and as
-a post-processing step, merge the binaries for multiple architectures into a
-single fat binary for each ABI. This would simplify the story from the package
-archive's perspective, but would require significant modifications to installer
-tooling (some of which would require callouts to platform-specfic build
-tooling).
+The first approach is to treat the problem as a package distribution issue. In
+this approach, artefacts stored in package repositories include all the ABIs and
+CPU architectures needed to meaningfully support a given platform. This is the
+approach embodied by the `universal2` packaging solution on macOS, and the iOS
+solution used by BeeWare.
 
-Supporting Android's archiving approach requires no particular modifications to
-the "single architecture" solutions in use today. However, there may be a
-benefit to the developer experience if it is possible to ensure consistency
-in the dependency resolution solutions that are found for each architecture.
-The could come in the form of:
-1. Allowing for the installation of multiple wheel architectures in a single
-   installation pass.
-2. Sharing dependency resolution solutions between installation passes.
-3. Tools to identify when two different install passes have generated different
-   dependency solutions.
-4. A "multi-architecture" Android wheel.
+This approach would require agreement on any new "known" multi-ABI/arch tags, as
+well as any resolution schemes that may be needed for those tags.
+
+A more general approach to this problem would be to allow for multi-architecture
+and multi-ABI binaries as part of the wheel naming scheme. A wheel can already
+declare compatibility with multiple CPython versions (e.g.,
+`cp34.cp35.cp36-abi3-manylinux1_x86_64`); it could be possible for a wheel to
+declare multiple ABI or architecture inclusions. In such a scheme,
+`cp310-abi3-macosx_10_9_universal2` would effectively be equivalent to
+`cp310-abi3-macosx_10_9_x86_64.macosx_10_9_arm64`; an iPhone wheel for the same
+package might be
+`cp310-abi3-iphoneos_12_0_arm64.iphonesimulator_12_0_x86_64.iphonesimulator_12_0_arm64`.
+
+This would allow for more generic logic based on matching name fragments, rather
+than specific "known name" targets.
+
+Regardless of whether "known tags" or a generic naming scheme is used, the
+distribution-based approach requires modifications to the process of building
+packages, and the process of installing packages.
+
+### Integration-based solution
+
+Alternatively, this could be treated as an install-time problem. This is the
+approach taken by BeeWare/Chaquopy on Android.
+
+In this approach, package repositories would continue to store
+single-architecture, single-ABI artefacts. However, at time of installation, the
+installation tool allows for the specification of multiple architectures/ABI
+combinations. The installer then downloads a wheel for each architecture/ABI
+requested, and performs any post-processing required to merge binaries for
+multiple architectures into a single fat binary, or archiving those binary
+artefacts in an appropriate location.
+
+This approach is less invasive from the perspective of package repositories and
+package build tooling; but would require significant modifications to installer
+tooling.

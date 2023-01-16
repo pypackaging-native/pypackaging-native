@@ -4,7 +4,7 @@ The historical assumption of compilation is that the platform where the code is
 compiled will be the same as the platform where the final code will be executed
 (if not literally the same machine, then at least one that is CPU and ABI
 compatible at the operating system level). This is a reasonable assumption for
-most desktop projects; However, for mobile platforms, this isn't the case.
+most desktop platforms; however, for some platforms, this isn't the case.
 
 On mobile platforms, an app is compiled on a desktop platform, and transferred
 to the mobile device (or a simulator) for testing. The compiler is not executed
@@ -27,14 +27,66 @@ x86_64 hardware; however, in this case, the host platform (macOS on x86_64) will
 still be one of the outputs of the compilation process, and the resulting binary
 will run on the CI/CD system.
 
+## Current state
+
+Native compiler and build toolchains (e.g., autoconf/automake, CMake) have long
+supported cross-compilation; however, these cross-compilation capabilities are
+easy to break unless they are exercised regularly.
+
+CPython's build system includes some support for cross-compilation. This support
+is largely based on leveraging autoconf's support for cross compilation. This
+support wasn't well integrated into distutils and the compilation of the binary
+portions of stdlib; however, with the deprecation and removal of disutils in
+Python 3.12, this situation has improved.
+
+The specification of PEP517 means cross-platform compilation support has been
+largely converted into a concern for individual build systems to manage.
+
+## Problems
+
+There is currently a small gap in communicating target platform details to the
+build system. While a build system like autoconf or Cmake may support
+cross-platform compilation, and a project may be able to cross-compile binary
+artefacts, invocation of the PEP517 build interface currently assumes that the
+platform running the build will be the platform that ultimately runs the Python
+code. As a result, `sys.platform`, or the various attributes of the `platform`
+library can't be used as part of the build process.
+
+`pip` provides limited support for installing binaries for a different platform
+by specifying a `--platform`, `--implementation` and `--abi` flags; however,
+these flags only work for the selection of pre-built binary artefacts.
+
+## History
+
+Tools like [crossenv](https://github.com/benfogle/crossenv) can be used to trick
+Python into performing cross-platform builds. These tools use path hacks and
+overrides of known sources of platform-specific details (like `distutils`) to
+provide a cross-compilation environment. However, these solutions tend to be
+somewhat fragile as they aren't first-class citizens of the Python ecosystem.
+
+[The BeeWare Project](https://beeware.org) also uses a version of these
+techniques. On both platforms, BeeWare provides a custom package index that
+contains pre-compiled binaries ([Android](https://chaquo.com/pypi-7.0/);
+[iOS](https://anaconda.org/beeware/repo)). These binaries are produced using a
+forge-like set of tooling
+([Android](https://github.com/chaquo/chaquopy/tree/master/server/pypi);
+[iOS](https://github.com/freakboy3742/chaquopy/tree/iOS-support/server/pypi)).
+
+## Relevant resources
+
+TODO
+
 ## Potential solutions or mitigations
 
-Compiler and build toolchains (e.g., autoconf/automake) have long supported
-cross-compilation; however, these cross-compilation capabilities are easy to
-break unless they are exercised regularly.
+At it's core, what is required is a recognition that cross-platform builds as a
+use case that the Python ecosystem supports.
 
-In the Python space, tools like [crossenv](https://github.com/benfogle/crossenv)
-also exist; these tools use a collection of path hacks and overrides of known
-sources of platform-specific details (like `distutils`) to provide a
-cross-compilation environment. However, these solutions tend to be somewhat
-fragile as they aren't first-class citizens of the Python ecosystem.
+In concrete terms, for native modules, this would require either:
+
+1. Extension of the PEP517 interface to allow communicating the desired target
+   platform as part of a binary build; or
+
+2. Formalization of the "platform identification" interface that can used by
+   PEP517 build backends to identify the target platform, so that tools like
+   `crossenv` can provide a reliable proxied environment for cross-platform
+   builds.
