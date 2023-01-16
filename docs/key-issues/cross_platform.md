@@ -36,8 +36,9 @@ given project tend to bitrot and break easily unless they are exercised regularl
 CPython's build system includes some support for cross-compilation. This support
 is largely based on leveraging autoconf's support for cross compilation. This
 support wasn't well integrated into distutils and the compilation of the binary
-portions of stdlib; however, with the deprecation and removal of disutils in
-Python 3.12, this situation has improved.
+portions of stdlib. The removal of distutils in Python 3.12 represents an
+improvement the overall situation, but there is still a long way to go before
+the ecosystem as a whole has fully integrated the consequences of this change.
 
 The specification of PEP517 means cross-platform compilation support has been
 largely converted into a concern for individual build systems to manage.
@@ -54,7 +55,9 @@ library can't be used as part of the build process.
 
 `pip` provides limited support for installing binaries for a different platform
 by specifying a `--platform`, `--implementation` and `--abi` flags; however,
-these flags only work for the selection of pre-built binary artefacts.
+these flags only work for the selection of pre-built binary artefacts, and are
+therefore constrained to the set of platform and ABI tags published by the
+author.
 
 ## History
 
@@ -68,9 +71,10 @@ somewhat fragile as they aren't first-class citizens of the Python ecosystem.
 techniques. On both platforms, BeeWare provides a custom package index that
 contains pre-compiled binaries ([Android](https://chaquo.com/pypi-7.0/);
 [iOS](https://anaconda.org/beeware/repo)). These binaries are produced using a
-forge-like set of tooling
+set of tooling
 ([Android](https://github.com/chaquo/chaquopy/tree/master/server/pypi);
-[iOS](https://github.com/freakboy3742/chaquopy/tree/iOS-support/server/pypi)).
+[iOS](https://github.com/freakboy3742/chaquopy/tree/iOS-support/server/pypi))
+that is analogous to the tools used by conda-forge to build binary artefacts.
 
 ## Relevant resources
 
@@ -78,10 +82,10 @@ TODO
 
 ## Potential solutions or mitigations
 
-At it's core, what is required is a recognition that cross-platform builds as a
-use case that the Python ecosystem supports.
+At it's core, what is required is a recognition that the use case of
+cross-platform builds is something that the Python ecosystem should support.
 
-In concrete terms, for native modules, this would require either:
+In concrete terms, for native modules, this would require some combination of:
 
 1. Extension of the PEP517 interface to allow communicating the desired target
    platform as part of a binary build; or
@@ -90,3 +94,10 @@ In concrete terms, for native modules, this would require either:
    PEP517 build backends to identify the target platform, so that tools like
    `crossenv` can provide a reliable proxied environment for cross-platform
    builds.
+
+3. Clear separation of metadata associated with the definition of build and
+   target platforms, rather than assuming that build and target platform will
+   always be the same.
+
+4. Extension of the PEP517 interface to report when a build steps (e.g., running
+   a code generation tool) cannot be run on the target hardware.

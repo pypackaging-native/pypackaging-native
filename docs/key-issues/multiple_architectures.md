@@ -1,8 +1,13 @@
 # Platforms with multiple CPU architectures
 
-In addition to any ABI requirements, a binary is compiled for a CPU
-architecture. That CPU architecture defines the CPU instructions that can be
-issued by the binary.
+One important subset of ABI concerns is the CPU architecture for which a binary
+artefact has been built. Attempting to run a binary on hardware that doesn't
+match the CPU architecture (or architecture variant [^1]) for which the binary
+was built will generally lead to crashes, even if the ABI being used is
+otherwise compatible.
+
+[^1] e.g., the x86-64 architecture has a range of well-known extensions, such as
+     SSE, SSE2, SSE3, AVX, AVX2, AVX512, etc.
 
 ## Current state
 
@@ -99,9 +104,9 @@ converted (e.g., if the binary being executed is fat, but a dynamic library
 isn't).
 
 To support the transition to Apple Silicon/M1 (ARM64), Python has introduced a
-`universal2` architecture target to support . This is effectively a "fat wheel"
-format; the `.dylib` files contained in the wheel are fat binaries containing
-both x86_64 and ARM64 slices.
+`universal2` architecture target. This is effectively a "fat wheel" format; the
+`.dylib` files contained in the wheel are fat binaries containing both x86_64
+and ARM64 slices.
 
 iOS has an additional complication of requiring support for mutiple *ABIs* in
 addition to multiple CPU archiectures. The ABI for the iOS simulator and
@@ -128,8 +133,8 @@ lookup scheme).
 Supporting iOS requires supporting between 2 and 5 architectures (x86_64 and
 ARM64 at the minimum), and at least 2 ABIs - the iOS simulator and iOS device
 have different (and incompatible) binary ABIs. At runtime, iOS expects to find a
-single "fat" binary for any given ABI. iOS effectively requires an analog of
-`universal2` covering the 2 ABIs and multiple architectures. However:
+single "fat" binary for the ABI that is in use. iOS effectively requires an
+analog of `universal2` covering the 2 ABIs and multiple architectures. However:
 
 1. The Python ecosystem does not provide an extension mechanism that would allow
    platforms to define and utilize multi-architecture build artefacts.
@@ -160,12 +165,13 @@ iOS and Android binaries. On both platforms, BeeWare provides a custom package
 index that contains pre-compiled binaries
 ([Android](https://chaquo.com/pypi-7.0/);
 [iOS](https://anaconda.org/beeware/repo)). These binaries are produced using a
-forge-like set of tooling
+set of tooling
 ([Android](https://github.com/chaquo/chaquopy/tree/master/server/pypi);
 [iOS](https://github.com/freakboy3742/chaquopy/tree/iOS-support/server/pypi))
-that patches the build systems for the most common Python binary dependencies;
-and on iOS, manages the process of merging single-architecture, single ABI
-wheels into a fat wheel.
+that is analogous to the tools used by conda-forge to build binary artefacts.
+These tools patch the source and build configurations for the most common Python
+binary dependencies; on iOS, these tools also manage the process of merging
+single-architecture, single ABI wheels into a fat wheel.
 
 On iOS, BeeWare-supplied iOS binary packages provide a single "iPhone" wheel.
 This wheel includes 2 binary libraries (one for the iPhone device ABI, and one
