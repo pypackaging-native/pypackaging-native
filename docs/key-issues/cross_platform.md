@@ -82,7 +82,7 @@ TODO
 
 ## Potential solutions or mitigations
 
-At it's core, what is required is a recognition that the use case of
+At the core, what is required is a recognition that the use case of
 cross-platform builds is something that the Python ecosystem should support.
 
 In concrete terms, for native modules, this would require some combination of:
