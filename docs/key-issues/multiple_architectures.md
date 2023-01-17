@@ -23,9 +23,9 @@ are supported:
 * In the early days of Windows NT, both x86 and DEC Alpha CPUs were supported
 * Windows 10 supports x86, x86-64, ARMv7 and ARM64; Windows 11 supports x86-64
   and ARM64.
-* Although Linux started as an x86 project, the Linux kernel is now available a
-  wide range of other CPU architectures, including ARM64, RISC-V, PowerPC, s390
-  and more.
+* Due to its open source nature, Linux tends to support all CPU architectures for
+  which someone is interested enough to author & provide support in the kernel,
+  see [here](https://en.wikipedia.org/wiki/List_of_Linux-supported_computer_architectures).
 * Apple transitioned Mac hardware from PowerPC to Intel (x86-64) CPUs, providing
   a forwards compatibility path for binaries
 * Apple is currently transitioning Mac hardware from Intel (x86-64) to
