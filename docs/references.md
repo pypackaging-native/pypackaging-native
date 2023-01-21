@@ -4,7 +4,7 @@
 ## Build systems & building wheels
 
 - [Tarek Ziadé - The fate of Distutils - Pycon Summit + Packaging Sprint detailed report (2010)](https://tarekziade.wordpress.com/2010/03/03/the-fate-of-distutils-pycon-summit-packaging-sprint-detailed-report/)
-- [Pauli Virtanen - Building Python wheels with Fortran for Windows (2017)](https://pav.iki.fi/blog/2017-10-08/pywingfortran.html#building-python-wheels-with-fortran-for-windows)
+- [Pauli Virtanen - Building Python wheels with Fortran for Windows (2017)](https://web.archive.org/web/20210616203153/https://pav.iki.fi/blog/2017-10-08/pywingfortran.html)
 - [Uwe Korn - How we build Apache Arrow's manylinux wheels (2019)](https://uwekorn.com/2019/09/15/how-we-build-apache-arrows-manylinux-wheels.html)
 - [Matthias Bussonnier - IPython reproducible builds (2020)](https://labs.quansight.org/blog/2020/08/ipython-reproducible-builds)
 - [Ralf Gommers - Moving SciPy to the Meson build system (2021)](https://labs.quansight.org/blog/moving-scipy-to-meson)
