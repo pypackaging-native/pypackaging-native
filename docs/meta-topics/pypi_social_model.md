@@ -14,7 +14,7 @@ An author-led model is common for language-specific package repositories -
 [crates.io](https://crates.io/) (Rust),
 [CRAN](https://cran.r-project.org/) (R),
 [RubyGems](https://rubygems.org/) (Ruby), and
-[CPAN](https://www.cpan.org/)(Perl) and work roughly the same way[^1].
+[CPAN](https://www.cpan.org/)(Perl) all work roughly the same way[^1].
 
 [^1]:
     PyPI has perhaps the least amount of rules and uniformity of all of the
