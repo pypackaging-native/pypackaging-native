@@ -2,17 +2,18 @@
 
 One important subset of ABI concerns is the CPU architecture for which a binary
 artefact has been built. Attempting to run a binary on hardware that doesn't
-match the CPU architecture (or architecture variant [^1]) for which the binary
+match the CPU architecture (or architecture variant[^1]) for which the binary
 was built will generally lead to crashes, even if the ABI being used is
 otherwise compatible.
 
-[^1] e.g., the x86-64 architecture has a range of well-known extensions, such as
-     SSE, SSE2, SSE3, AVX, AVX2, AVX512, etc.
+[^1]:
+    E.g., the x86-64 architecture has a range of well-known extensions, such as
+    SSE, SSE2, SSE3, AVX, AVX2, AVX512, etc.
 
 ## Current state
 
 Historically, it could be assumed that an executable or library would be
-compiled for a single CPU archicture. On the rare occasion that an operating
+compiled for a single CPU architecture. On the rare occasion that an operating
 system was available for mulitple CPU architectures, it became the
 responsibility of the user to find (or compile) a binary that was compiled for
 their host CPU architecture.
@@ -105,11 +106,11 @@ isn't).
 
 To support the transition to Apple Silicon/M1 (ARM64), Python has introduced a
 `universal2` architecture target. This is effectively a "fat wheel" format; the
-`.dylib` files contained in the wheel are fat binaries containing both x86_64
+`.dylib` files contained in the wheel are fat binaries containing both x86-64
 and ARM64 slices.
 
 iOS has an additional complication of requiring support for mutiple *ABIs* in
-addition to multiple CPU archiectures. The ABI for the iOS simulator and
+addition to multiple CPU architectures. The ABI for the iOS simulator and
 physical iOS devices are different; however, ARM64 is a supported CPU
 architecture for both. As a result, it is not possible to produce a single fat
 library that supports both the iOS simulator and iOS devices. Apple provides an
@@ -130,7 +131,7 @@ multi-architecture configuration, and involves a number of specific
 accomodations in the Python ecosystem (e.g., a macOS-specific architecture
 lookup scheme).
 
-Supporting iOS requires supporting between 2 and 5 architectures (x86_64 and
+Supporting iOS requires supporting between 2 and 5 architectures (x86-64 and
 ARM64 at the minimum), and at least 2 ABIs - the iOS simulator and iOS device
 have different (and incompatible) binary ABIs. At runtime, iOS expects to find a
 single "fat" binary for the ABI that is in use. iOS effectively requires an
@@ -175,7 +176,7 @@ single-architecture, single ABI wheels into a fat wheel.
 
 On iOS, BeeWare-supplied iOS binary packages provide a single "iPhone" wheel.
 This wheel includes 2 binary libraries (one for the iPhone device ABI, and one
-for the iPhone Simulator ABI); the iPhone simulator binary includes x86_64 and
+for the iPhone Simulator ABI); the iPhone simulator binary includes x86-64 and
 ARM64 slices. This is effectively the "universal-iphone" approach, encoding a
 specific combination of ABIs and architectures.
 
@@ -185,10 +186,10 @@ each platform; it also contains a wrapper around `pip` to manage the
 installation of multiple binaries. When a Python project requests the
 installation of a package:
 
-* Pip is run normally for one binary architecture
+* Pip is run normally for one binary architecture,
 * The `.dist-info` metadata is used to identify the native packages -  both
   those directly requested by the user, and those installed as indirect
-  requirements by pip
+  requirements by pip,
 * The native packages are separated from the pure-Python packages, and pip is
   then run again for each of the remaining architectures; this time, only those
   specific native packages are installed, pinned to the same versions that pip
@@ -203,15 +204,15 @@ platform including build support for libraries that may be required.
 
 To date, there haven't been extensive public discussions about the support of
 iOS or Android binary packages. However, there were discussions around the
-adoption of universal2 for macOS:
+adoption of `universal2` for macOS:
 
-* [The CPython discussion about universal2
+* [The CPython discussion about `universal2`
   support](https://discuss.python.org/t/apple-silicon-and-packaging/4516)
-* [The addition of universal2 to
+* [The addition of `universal2` to
   CPython](https://github.com/python/cpython/pull/22855)
 * [Support in packaging for
-  universal2](https://github.com/pypa/packaging/pull/319), which declares the
-  logic around resolving universal2 to specific platforms.
+  `universal2`](https://github.com/pypa/packaging/pull/319), which declares the
+  logic around resolving `universal2` to specific platforms.
 
 ## Potential solutions or mitigations
 
