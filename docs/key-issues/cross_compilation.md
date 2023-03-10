@@ -57,7 +57,8 @@ Or one can use a packaging system that has builtin support for cross-compilation
 [OpenEmbedded](https://www.openembedded.org/wiki/Main_Page) and
 [Buildroot](https://buildroot.org/) are projects specifically focused on
 cross-compilation for Linux embedded systems. More general-purpose packaging
-ecosystems often have toolchains and supporting infrastructure to cross-compile packages for their own needs - see, e.g., info for
+ecosystems often have toolchains and supporting infrastructure to cross-compile
+packages for their own needs - see, e.g., info for
 [Void Linux](https://github.com/void-linux/void-packages#cross-compiling),
 [conda-forge](https://conda-forge.org/),
 [Debian](https://wiki.debian.org/CrossCompiling) and
