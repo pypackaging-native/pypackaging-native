@@ -24,10 +24,10 @@ compiled for the target platform.
 macOS also experiences this as a result of the Apple Silicon transition. Apple
 has provided the tools to make cross compilation from x86-64 to arm64 as easy
 as possible, as well as to compile [fat binaries](multiple_architectures.md)
-(supporting x86-64 and arm64 at the same time) on x86-64 hardware. In the latter
-case, the host platform (macOS on x86-64) will still be one of the outputs
-of the compilation process, and the resulting binary will run on the CI/CD
-system.
+(supporting x86-64 and arm64 at the same time) on both architectures. In the
+latter case, the host platform will still be one of the outputs of the
+compilation process, and the resulting binary will run on the CI/CD system.
+
 
 ## Current state
 
@@ -72,9 +72,10 @@ ecosystems often have toolchains and supporting infrastructure to cross-compile 
 
 Tools like [crossenv](https://github.com/benfogle/crossenv) can be used to trick
 Python into performing cross-platform builds. These tools use path hacks and
-overrides of known sources of platform-specific details (like `distutils`) to
-provide a cross-compilation environment. However, these solutions tend to be
-somewhat fragile as they aren't first-class citizens of the Python ecosystem.
+overrides of known sources of platform-specific details (like `sysconfig` and
+`distutils`) to provide a cross-compilation environment. However, these
+solutions tend to be somewhat fragile as they aren't first-class citizens of
+the Python ecosystem.
 
 [The BeeWare Project](https://beeware.org) also uses a version of these
 techniques. For both the platforms it supports, BeeWare provides a custom
@@ -88,7 +89,7 @@ that is analogous to the tools used by conda-forge to build binary artefacts.
 ## Problems
 
 There is currently a gap in _communicating target platform details to the
-build system_. While a build system like autoconf or CMake may support
+build system_. While a build system like Meson or CMake may support
 cross-platform compilation, and a project may be able to cross-compile binary
 artefacts, invocation of a `pyproject.toml` build hook typically assumes that the
 platform running the build will be the platform that ultimately runs the Python
@@ -96,19 +97,30 @@ code. As a result, `sys.platform`, or the various attributes of the `platform`
 and `sysconfig` modules can't be used as part of the build process.
 
 _Running Python code_ for the host (cross) platform is not possible (modulo
-using an emulator), but Python packages have not designed for this. to be
-avoided. For example, `numpy` and `pybind11` ship headers and have
-`get_include()` functions in their main namespaces to obtain the path to those
-headers. That is clearly a problem, which packages dependending on those
-headers have to work around (often done by patching those packages with
-hardcoded paths within a cross-compilation setup).
+using an emulator), but Python packages have not taken this into account and
+provided ways to avoid the need to run the host interpreter. For example,
+`numpy` and `pybind11` ship headers and have `get_include()` functions in their
+main namespaces to obtain the path to those headers. That is clearly a problem,
+which packages dependending on those headers have to work around (often done by
+patching those packages with hardcoded paths within a cross-compilation setup).
 
-`pip` provides limited support for installing binaries for a different platform
-by specifying a `--platform`, `--implementation` and `--abi` flags; however,
-these flags only work for the selection of pre-built binary artefacts, and are
-therefore constrained to the set of platform and ABI tags published by the
-author.
+`pip` provides support for installing wheels for a different platform
+by specifying a `--platform`, `--implementation` and `--abi` flags. However,
+these flags only work for packages with wheels, not sdists. Therefore, for
+cross compilation setups that rely on `pip` rather than another package manager
+to install build dependencies, it is cumbersome in practice to prepare the host
+(non-native) part of the cross build environment - a single missing `-none-any`
+wheel for a dependency that is pure Python necessitates hacks to get it
+installed.[^2]
 
+[^2]:
+    The correct solution - filing issues on each project asking them to upload
+    a `-none-any` wheel next to their sdist - typically has a long lead time.
+    Therefore [Briefcase](https://beeware.org/project/projects/tools/briefcase/), the
+    packaging tool for Beeware, patches `pip` to allow installing projects from
+    sdists when `--platform` is specified and only error out when the wheel
+    build attempts to invoke a compiler. That way, pure Python packages can be
+    installed directly.
 
 ## History
 
