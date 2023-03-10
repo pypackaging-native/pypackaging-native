@@ -43,6 +43,23 @@ workarounds for.
     happens through community input
     [on GitHub](https://github.com/pypackaging-native/pypackaging-native).
 
+??? question "Where do potential solutions for these topics get discussed?"
+
+    The central place for discussion potential changes to Python packaging is
+    [the packaging category of the Python Discourse
+    forum](https://discuss.python.org/c/packaging/14). For smaller changes and
+    ideas that are specific to a single tool, the issue tracker of the
+    individual tool is most likely a good place to start.
+
+    For some relevant big-picture discussions about changes to Python
+    packaging, which touched upon issues with native code frequently, see these
+    threads:
+
+    - [Wanting a singular packaging tool/vision](https://discuss.python.org/t/wanting-a-singular-packaging-tool-vision/21141)
+      (started Nov 2022),
+    - [Python Packaging Strategy Discussion - Part 1](https://discuss.python.org/t/python-packaging-strategy-discussion-part-1/22420)
+      (Jan-Feb 2023),
+
 
 ## Meta topics
 
@@ -51,6 +68,7 @@ workarounds for.
 - [PyPI's author-led social model and its limitations](meta-topics/pypi_social_model.md)
 - [Lack of a build farm for PyPI](meta-topics/no_build_farm.md)
 - [Expectations that projects provide ever more wheels](meta-topics/user_expectations_wheels.md)
+
 
 ## Key issues
 
