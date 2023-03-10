@@ -67,8 +67,8 @@ workarounds for.
 4. [Metadata handling on PyPI](key-issues/pypi_metadata_handling.md)
 5. [Distributing a package containing SIMD code](key-issues/simd_support.md)
 6. [Unsuspecting users getting failing from source builds](key-issues/unexpected_fromsource_builds.md)
-7. [Platforms with multiple CPU architectures](key-issues/multiple_architectures.md)
-8. [Cross-platform installation](key-issues/cross_platform.md)
+7. [Cross compilation](key-issues/cross_compilation.md)
+8. [Platforms with multiple CPU architectures](key-issues/multiple_architectures.md)
 
 
 ## Contributing
