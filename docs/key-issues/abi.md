@@ -31,11 +31,6 @@ to care about:
     [mpi-issues#654](https://github.com/mpi-forum/mpi-issues/issues/654) for
     (lack of) MPI ABI stability).
 
-As an example of an ABI issue that many Python developers will encounter: a
-debug build of CPython is not ABI-compatible with a release build, hence if one
-wants to use a debug Python, one has to rebuild every package that uses the
-Python C API.
-
 For some more background on ABI, see [here](../background/binary_interface.md).
 
 
