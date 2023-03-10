@@ -23,7 +23,7 @@ compiled for the target platform.
 
 macOS also experiences this as a result of the Apple Silicon transition. Apple
 has provided the tools to make cross compilation from x86-64 to arm64 as easy
-as possible, as well as to compile [fat binaries](multiple_architectures.md)
+as possible, as well as to compile fat binaries
 (supporting x86-64 and arm64 at the same time) on both architectures. In the
 latter case, the host platform will still be one of the outputs of the
 compilation process, and the resulting binary will run on the CI/CD system.
