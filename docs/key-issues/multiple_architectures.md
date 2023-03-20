@@ -12,14 +12,7 @@ otherwise compatible.
 
 ## Current state
 
-Historically, it could be assumed that an executable or library would be
-compiled for a single CPU architecture. On the rare occasion that an operating
-system was available for mulitple CPU architectures, it became the
-responsibility of the user to find (or compile) a binary that was compiled for
-their host CPU architecture.
-
-However, we now see operating system platforms where multiple CPU architectures
-are supported:
+Most operating systems support multiple CPU architectures:
 
 * In the early days of Windows NT, both x86 and DEC Alpha CPUs were supported
 * Windows 10 supports x86, x86-64, ARMv7 and ARM64; Windows 11 supports x86-64
@@ -36,14 +29,12 @@ are supported:
 * Android currently supports ARMv7, ARM64, x86, and x86-64; it has historically
   also supported ARMv5 and MIPS
 
+The general expectation is that an executable or library is compiled for a
+single CPU archicture.
+
 CPU architecture compatibility is a necessary, but not sufficient criterion for
 determining binary compatibility. Even if two binaries are compiled for the same
 CPU architecture, that doesn't guarantee [ABI compatibility](abi.md).
-
-In some respects, CPU architecture compatibility could be considered a superset
-of [GPU compatibility](gpus.md). When dealing with multiple CPU architectures,
-there may be some overlap with the solutions that can be used to support GPUs in
-native binaries.
 
 Three approaches have emerged on operating systmes that have a need to manage
 multiple CPU architectures:
@@ -54,6 +45,10 @@ The minimal solution is to distribute multiple binaries. This is the approach
 that is by Windows and Linux. At time of distribution, an installer or other
 downloadable artefact is provided for each supported platform, and it is up to
 the user to select and download the correct artefact.
+
+At present, the Python ecosystem almost exclusively uses the "multiple binary"
+solution. This serves the needs of Windows and Linux well, as it matches the
+way end-users interact with binaries on those platforms.
 
 ### Archiving
 
@@ -91,7 +86,10 @@ Fat binaries can be compiled in two ways:
    compiler to generate multiple output architectures in the output binary
 2. **Multiple pass** After compiling a binary for each platform, Apple provides
    a call named `lipo` to combine multiple single-architecture binaries into a
-   single fat binary that contains all platforms.
+   single fat binary that contains all platforms. The `delocate-fuse` command
+   provided by the [delocate](https://pypi.org/project/delocate/) Python package
+   can be used to perform this merging on Python wheels (along with other
+   functionality).
 
 At runtime, the operating system loads the binary slice for the current CPU
 architecture, and the linker loads the appropriate slice from the fat binary of
@@ -121,15 +119,15 @@ physical devices.
 
 ## Problems
 
-At present, the Python ecosystem almost exclusively uses the "multiple binary"
-solution. This serves the needs of Windows and Linux well, as it matches the
-way end-users interact with binaries.
+The problems that exist with supporting multiple architectures are limited to
+those platforms that expect distributable artefacts to support multiple
+platforms simultanously - macOS, iOS and Android.
 
-The `universal2` "fat wheel" solution also works well for macOS. The definition
-of `universal2` is a hard-coded accomodation for one specific (albeit common)
-multi-architecture configuration, and involves a number of specific
-accomodations in the Python ecosystem (e.g., a macOS-specific architecture
-lookup scheme).
+Although the `universal2` "fat wheel" format exists, there is some resistance to
+using this format in some circles (in particular in the science/data ecosystem).
+If a package publishes independent wheels for x86_64 and M1, there's no
+ecosystem-level tooling for consuming those artefacts. However, ad-hoc approaches
+using `delocate` or `lipo` can be used.
 
 Supporting iOS requires supporting between 2 and 5 architectures (x86-64 and
 ARM64 at the minimum), and at least 2 ABIs - the iOS simulator and iOS device
