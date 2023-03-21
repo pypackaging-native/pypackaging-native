@@ -107,6 +107,68 @@ To support the transition to Apple Silicon/M1 (ARM64), Python has introduced a
 `.dylib` files contained in the wheel are fat binaries containing both x86-64
 and ARM64 slices.
 
+
+??? question "What's the deal with `universal2` wheels?"
+
+    The `universal2` fat wheel format has generated quite a bit of discussion,
+    and isn't well-supported by either packaging tools (e.g., there is no way
+    to install a `universal2` wheel from PyPI if thin wheels are also present)
+    or package authors (most numerical, scientific and ML/AI package authors do
+    not provide them). There are some arguments for and against supporting the
+    format or even defaulting to it.
+
+    Arguments for (Russell to write):
+
+    - xxx
+
+    Arguments against:
+
+    - `universal2` wheels are never necessary for end users, they are only an
+      intermediate stage for workflows and tooling to build macOS apps (`.dmg`
+      downloadable installers or similar formats, produced by for example
+      [py2app](https://py2app.readthedocs.io) or
+      [briefcase](https://beeware.org/project/projects/tools/briefcase/)).
+    - The tradeoff between download size and disk space usage vs. the upside
+      for say a .dmg installer is bad - for a typical PyData stack it takes
+      hundreds of MBs per Python environment more than thin wheels, and users
+      are likely to have quite a few environments on their system at once.
+      Meaning that defaulting to `universal2` would use several GBs of disk
+      space more.
+
+        - Disk space on the base MacBook models is 128 GB, and up to half of that
+          can be taken up by the OS and system data itself. So a few GBs is
+          significant.
+        - Internet plans in many countries are not unlimited; almost doubling the
+          download size of wheels is a serious cost, and not desirable for any
+          user - but especially unfriendly to users in countries where network
+          infrastructure is less developed.
+
+    - In addition, it takes extra space on PyPI (examples: `universal2` wheels
+      cost an extra 81.5 MB for NumPy 1.21.4 and 175.5 MB for SciPy 1.9.1), and
+      projects with large wheels often run into total size limits on PyPI.
+    - It imposes an extra maintenance burden for each project, because separate
+      CI jobs are needed to build and test `universal2` wheels. Typically
+      projects make tradeoffs there, because they cannot support every
+      platform. And `universal2` doesn't meet the bar for usage frequency /
+      user demand here - it's well below the demand for `musllinux`,
+      `ppc64le`, PyPy, and other such platforms with still patchy support
+      (see [Expectations that projects provide ever more wheels](../../meta-topics/user_expectations_wheels.md)
+      for more on that).
+    - When a project provides thin wheels (which is a must-do for projects with
+      native code, because those are the better experience due to smaller
+      size), you cannot even install a `universal2` wheel with pip from PyPI at
+      all. Why upload artifacts you cannot install?
+    - It is straightforward to fuse two thin wheels with `delocate-fuse` (a
+      tool that comes with [delocate](https://pypi.org/project/delocate/)),
+      it's a one-liner: `delocate-fuse $x86-64_wheel $arm64_wheel -w .`
+    - Open source projects rely on freely available CI systems to support
+      particular hardware architectures. CI support for macOS `arm64` was a
+      problem at first, but is now available through Cirrus CI. And that
+      availability is expected to grow over time; GitHub Actions and other
+      providers will roll out support at some point. This allows building thin
+      wheels and run tests - which is nicer than building `universal2` wheels
+      on x86-64 and testing only the x86-64 part of those wheels.
+
 iOS has an additional complication of requiring support for mutiple *ABIs* in
 addition to multiple CPU architectures. The ABI for the iOS simulator and
 physical iOS devices are different; however, ARM64 is a supported CPU
