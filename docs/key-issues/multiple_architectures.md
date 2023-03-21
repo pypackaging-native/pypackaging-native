@@ -117,17 +117,35 @@ and ARM64 slices.
     not provide them). There are some arguments for and against supporting the
     format or even defaulting to it.
 
-    Arguments for (Russell to write):
+    Arguments for:
 
-    - xxx
+    - While users with a technical background are usually aware of the CPU
+      architecture of their machine, less technical end users are often
+      unaware of this detail (or of the significance of this detail). The
+      universal2 wheel format allows users to largely ignore this detail, as
+      all CPU architectures for the macOS platform are accomodated in a single
+      binary artefact.
+    - macOS has developed an ecosystem where end users expect that any macOS
+      binary will run on any macOS machine, regardless of CPU architecture.
+      As a result, when building macOS apps (`.dmg` downloadable installers
+      or similar formats, produced by tools such as
+      [py2app](https://py2app.readthedocs.io) or
+      [briefcase](https://beeware.org/project/projects/tools/briefcase/)),
+      the person building the project must be accommodate all possible CPU
+      architectures where the code *could* be executed.
+    - If binary wheels are only available in "thin" format, any issues with
+      merging those wheels into fat equivalents for distribution purposes are
+      deferred to the end user. This can be problematic as it may require
+      expert knowledge about the package being merged (such as optional
+      modules or header files that may not be present in both thin artefacts).
+      Universal2 artefacts captures this knowledge by requiring the project
+      maintainers to resolve any merging issues.
 
     Arguments against:
 
-    - `universal2` wheels are never necessary for end users, they are only an
-      intermediate stage for workflows and tooling to build macOS apps (`.dmg`
-      downloadable installers or similar formats, produced by for example
-      [py2app](https://py2app.readthedocs.io) or
-      [briefcase](https://beeware.org/project/projects/tools/briefcase/)).
+    - `universal2` wheels are never necessary for end users installing into
+      a locally installed Python environment exclusively for their own use,
+      which is the default experience most users have with Python.
     - The tradeoff between download size and disk space usage vs. the upside
       for say a .dmg installer is bad - for a typical PyData stack it takes
       hundreds of MBs per Python environment more than thin wheels, and users
@@ -135,8 +153,8 @@ and ARM64 slices.
       Meaning that defaulting to `universal2` would use several GBs of disk
       space more.
 
-        - Disk space on the base MacBook models is 128 GB, and up to half of that
-          can be taken up by the OS and system data itself. So a few GBs is
+        - Disk space on older MacBook Air models is 128 GB, and up to half of that
+          can be taken up by the OS and system data itself. So a few GBs can be
           significant.
         - Internet plans in many countries are not unlimited; almost doubling the
           download size of wheels is a serious cost, and not desirable for any
