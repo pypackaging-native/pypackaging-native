@@ -131,7 +131,7 @@ and ARM64 slices.
       or similar formats, produced by tools such as
       [py2app](https://py2app.readthedocs.io) or
       [briefcase](https://beeware.org/project/projects/tools/briefcase/)),
-      the person building the project must be accommodate all possible CPU
+      the person building the project must accommodate all possible CPU
       architectures where the code *could* be executed.
     - If binary wheels are only available in "thin" format, any issues with
       merging those wheels into fat equivalents for distribution purposes are
