@@ -36,13 +36,13 @@ CPU architecture compatibility is a necessary, but not sufficient criterion for
 determining binary compatibility. Even if two binaries are compiled for the same
 CPU architecture, that doesn't guarantee [ABI compatibility](abi.md).
 
-Three approaches have emerged on operating systmes that have a need to manage
+Three approaches have emerged on operating systems that have a need to manage
 multiple CPU architectures:
 
 ### Multiple binaries
 
 The minimal solution is to distribute multiple binaries. This is the approach
-that is by Windows and Linux. At time of distribution, an installer or other
+that is taken by Windows and Linux. At time of distribution, an installer or other
 downloadable artefact is provided for each supported platform, and it is up to
 the user to select and download the correct artefact.
 
@@ -96,7 +96,7 @@ architecture, and the linker loads the appropriate slice from the fat binary of
 any dynamic libraries.
 
 On macOS ARM hardware, Apple also provides Rosetta as a support mechanism; if a
-user tries to run an binary that doesn't contain an ARM64 slice, but *does*
+user tries to run a binary that doesn't contain an ARM64 slice, but *does*
 contain an x86-64 slice, the x86-64 slice will be converted at runtime into an
 ARM64 binary. Complications can occur when only *some* of the binary is being
 converted (e.g., if the binary being executed is fat, but a dynamic library
@@ -195,7 +195,7 @@ and ARM64 slices.
       `universal2` wheels on x86-64 and testing only the x86-64 part of those
       wheels.
 
-iOS has an additional complication of requiring support for mutiple *ABIs* in
+iOS has an additional complication of requiring support for multiple *ABIs* in
 addition to multiple CPU architectures. The ABI for the iOS simulator and
 physical iOS devices are different; however, ARM64 is a supported CPU
 architecture for both. As a result, it is not possible to produce a single fat
