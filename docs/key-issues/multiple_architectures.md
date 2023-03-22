@@ -307,9 +307,17 @@ adoption of `universal2` for macOS:
 
 ## Potential solutions or mitigations
 
-There are two approaches that could be used to provide a general solution to
-this problem, depending on whether the support of multiple architectures is
-viewed as a distribution or integration problem.
+For macOS universal app builders, first-class tooling in the Python ecosystem
+to fuse thin wheels is needed. This may be done by, for example, making
+`delocate-fuse` more robust (see
+[delocate#180](https://github.com/matthew-brett/delocate/issues/180)).
+and then making `delocate` itself more visible or merging `delocate` into
+`auditwheel`. This tooling is then available as shared tooling to support
+universal app builders like `py2app` and `briefcase`.
+
+For the general multiple architecture case, there are two approaches that could
+be used to provide a solution to this problem, depending on whether the support
+of multiple architectures is viewed as a distribution or integration problem.
 
 ### Distribution-based solution
 
