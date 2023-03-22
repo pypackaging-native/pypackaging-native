@@ -189,9 +189,11 @@ and ARM64 slices.
       particular hardware architectures. CI support for macOS `arm64` was a
       problem at first, but is now available through Cirrus CI. And that
       availability is expected to grow over time; GitHub Actions and other
-      providers will roll out support at some point. This allows building thin
-      wheels and run tests - which is nicer than building `universal2` wheels
-      on x86-64 and testing only the x86-64 part of those wheels.
+      providers [will roll out support at some
+      point](https://github.com/github/roadmap/issues/528). This allows
+      building thin wheels and run tests - which is nicer than building
+      `universal2` wheels on x86-64 and testing only the x86-64 part of those
+      wheels.
 
 iOS has an additional complication of requiring support for mutiple *ABIs* in
 addition to multiple CPU architectures. The ABI for the iOS simulator and
