@@ -168,9 +168,11 @@ and ARM64 slices.
       CI jobs are needed to build and test `universal2` wheels. Typically
       projects make tradeoffs there, because they cannot support every
       platform. And `universal2` doesn't meet the bar for usage frequency /
-      user demand here - it's well below the demand for `musllinux`,
-      `ppc64le`, PyPy, and other such platforms with still patchy support
-      (see [Expectations that projects provide ever more wheels](../../meta-topics/user_expectations_wheels.md)
+      user demand here - it is only asked for by macOS universal app authors,
+      and in practice that demand seems to be well below the demand for
+      wheels for other platforms with still-patchy support like `musllinux`,
+      `ppc64le`, and PyPy (see
+      [Expectations that projects provide ever more wheels](../../meta-topics/user_expectations_wheels.md)
       for more on that).
     - When a project provides thin wheels (which is a must-do for projects with
       native code, because those are the better experience due to smaller
