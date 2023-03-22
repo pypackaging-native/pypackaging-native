@@ -147,12 +147,11 @@ and ARM64 slices.
     - `universal2` wheels are never necessary for users installing into a
       locally installed Python environment exclusively for their own use,
       which is the default experience most users have with Python.
-    - The tradeoff between download size and disk space usage vs. the upside
-      for say a .dmg installer is bad - for a typical PyData stack it takes
-      hundreds of MBs per Python environment more than thin wheels, and users
-      are likely to have quite a few environments on their system at once.
-      Meaning that defaulting to `universal2` would use several GBs of disk
-      space more.
+    - Using `universal2` wheels requires larger downloads and more disk
+      space - for a typical PyData stack it takes hundreds of MBs per Python
+      environment more than thin wheels, and users are likely to have quite a
+      few environments on their system at once. Meaning that defaulting to
+      `universal2` would use several GBs of disk space more.
 
         - Disk space on older MacBook Air models is 128 GB, and up to half of that
           can be taken up by the OS and system data itself. So a few GBs can be
