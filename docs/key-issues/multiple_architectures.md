@@ -183,11 +183,13 @@ and ARM64 slices.
     - It is straightforward to fuse two thin wheels with `delocate-fuse` (a
       tool that comes with [delocate](https://pypi.org/project/delocate/)),
       it's a one-liner: `delocate-fuse $x86-64_wheel $arm64_wheel -w .`
-      However, it's worth noting that this requires that any headers or python
-      files included in the wheel are consistent across all thin wheels; if this
-      isn't the case, the merged wheel will be incomplete or fragile (see
-      [this issue](https://github.com/matthew-brett/delocate/issues/180) for
-      details).
+      Note though that robustness improvements in `delocate-fuse` for more
+      complex cases (e.g., generated header files with architecture-dependent
+      content) are needed (see
+      [delocate#180](https://github.com/matthew-brett/delocate/issues/180)).
+      Such cases are likely to be equally problematic for direct `universal2`
+      wheel builds (see, e.g.,
+      [numpy#22805](https://github.com/numpy/numpy/pull/22805)).
     - Open source projects rely on freely available CI systems to support
       particular hardware architectures. CI support for macOS `arm64` was a
       problem at first, but is now available through Cirrus CI. And that
