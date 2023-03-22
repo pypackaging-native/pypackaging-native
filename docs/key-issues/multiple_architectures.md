@@ -120,11 +120,11 @@ and ARM64 slices.
     Arguments for:
 
     - While users with a technical background are usually aware of the CPU
-      architecture of their machine, less technical end users are often
-      unaware of this detail (or of the significance of this detail). The
-      universal2 wheel format allows users to largely ignore this detail, as
-      all CPU architectures for the macOS platform are accomodated in a single
-      binary artefact.
+      architecture of their machine, less technical users are often unaware of
+      this detail (or of the significance of this detail). The universal2 wheel
+      format allows users to largely ignore this detail, as all CPU
+      architectures for the macOS platform are accomodated in a single binary
+      artefact.
     - macOS has developed an ecosystem where end users expect that any macOS
       binary will run on any macOS machine, regardless of CPU architecture.
       As a result, when building macOS apps (`.dmg` downloadable installers
@@ -135,16 +135,17 @@ and ARM64 slices.
       architectures where the code *could* be executed.
     - If binary wheels are only available in "thin" format, any issues with
       merging those wheels into fat equivalents for distribution purposes are
-      deferred to the end user. This can be problematic as it may require
-      expert knowledge about the package being merged (such as optional
-      modules or header files that may not be present in both thin artefacts).
-      Universal2 artefacts captures this knowledge by requiring the project
-      maintainers to resolve any merging issues.
+      deferred to the person downloading the wheels (i.e., the app builder).
+      This can be problematic as it may require expert knowledge about the
+      package being merged (such as optional modules or header files that may
+      not be present in both thin artefacts). Universal2 artefacts captures
+      this knowledge by requiring the maintainers of the wheel-producing
+      project to resolve any merging issues.
 
     Arguments against:
 
-    - `universal2` wheels are never necessary for end users installing into
-      a locally installed Python environment exclusively for their own use,
+    - `universal2` wheels are never necessary for users installing into a
+      locally installed Python environment exclusively for their own use,
       which is the default experience most users have with Python.
     - The tradeoff between download size and disk space usage vs. the upside
       for say a .dmg installer is bad - for a typical PyData stack it takes
@@ -179,6 +180,11 @@ and ARM64 slices.
     - It is straightforward to fuse two thin wheels with `delocate-fuse` (a
       tool that comes with [delocate](https://pypi.org/project/delocate/)),
       it's a one-liner: `delocate-fuse $x86-64_wheel $arm64_wheel -w .`
+      However, it's worth noting that this requires that any headers or python
+      files included in the wheel are consistent across all thin wheels; if this
+      isn't the case, the merged wheel will be incomplete or fragile (see
+      [this issue](https://github.com/matthew-brett/delocate/issues/180) for
+      details).
     - Open source projects rely on freely available CI systems to support
       particular hardware architectures. CI support for macOS `arm64` was a
       problem at first, but is now available through Cirrus CI. And that
