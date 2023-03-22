@@ -176,7 +176,8 @@ and ARM64 slices.
     - When a project provides thin wheels (which is a must-do for projects with
       native code, because those are the better experience due to smaller
       size), you cannot even install a `universal2` wheel with pip from PyPI at
-      all. Why upload artifacts you cannot install?
+      all. Why upload artifacts you cannot install? This is due to a [known bug
+      in pip](https://github.com/pypa/pip/issues/11573).
     - It is straightforward to fuse two thin wheels with `delocate-fuse` (a
       tool that comes with [delocate](https://pypi.org/project/delocate/)),
       it's a one-liner: `delocate-fuse $x86-64_wheel $arm64_wheel -w .`
