@@ -30,23 +30,27 @@ Packaging such projects for PyPI has been, and still is, quite challenging.
 
 ## Current state
 
-As of December 2022, PyPI and Python packaging tools are completely unaware of
+As of May 2023, PyPI and Python packaging tools are completely unaware of
 GPUs, and of CUDA. There is no way to mark a package as needing a GPU in sdist
 or wheel metadata, or as containing GPU-specific code (CUDA or otherwise). A
 GPU is hardware that may or may not be present in a machine that a Python
 package is being installed on - `pip` and other installers are unaware of this.
-If wheels contain CUDA code, they require CUDA Toolkit (a specific version of
-it at that) to be installed. Again, installers do not know this and there is no
-way to express this dependency. The same will be true for ROCm and other types
-of GPU hardware and languages.
+If wheels contain CUDA code, they require the CUDA Toolkit (a specific version
+of it at that) to be installed. Again, installers do not know this and there is
+no way to express this dependency. The same will be true for ROCm and other
+types of GPU hardware and languages.
 
-NVIDIA has made steps towards better support for CUDA on PyPI, through
-CUDA Python ([website](https://developer.nvidia.com/cuda-python), 
-[PyPI package](https://pypi.org/project/cuda-python)), however this is quite
-new and not used by other projects (nor does it target large projects like
-PyTorch and TensorFlow). For most of its own projects, it uses a
-[Private PyPI Index](https://pypi.org/project/nvidia-pyindex/) - and that also
-includes rebuilds of TensorFlow and other packages.
+NVIDIA has made steps towards better support for CUDA on PyPI. Various
+library components of the CTK have been packaged as wheels and are now
+distributed on PyPI, such as
+[nvidia-cublas-cu11](https://pypi.org/project/nvidia-cublas-cu11/). Python
+wrappers around CUDA libraries have been consolidated into CUDA Python
+([website](https://developer.nvidia.com/cuda-python), 
+[PyPI package](https://pypi.org/project/cuda-python)), but this package assumes
+that the CUDA runtime and driver are already installed since it only provides
+Python bindings to the API. Many other projects remain hosted on
+[NVIDIA's Private PyPI Index](https://pypi.org/project/nvidia-pyindex/), which
+also includes rebuilds of TensorFlow and other packages.
 
 A single CUDA version supports a reasonable range of GPU architectures. New
 CUDA versions get released regularly, and - because they come with increased
@@ -54,28 +58,38 @@ performance or new functionality - it may be necessary or desirable to build
 new wheels for that CUDA version. If only the supported CUDA version is
 different between two wheels, the wheel tags and filename will be identical.
 Hence it is not possible to upload more than one of those wheels under the same
-package name. To work around that, a project may either support only one CUDA
-version on PyPI, or create different packages. PyTorch and TensorFlow do the
-former, with TensorFlow supporting only a single CUDA version, and PyTorch
-providing more wheels for other CUDA versions and a CPU-only version in a
-separate wheelhouse (see
+package name.
+
+Historically, this required projects to produce packages specific CUDA minor
+versions. Projects would either support only one CUDA version on PyPI, or create
+different packages. PyTorch and TensorFlow do the former, with TensorFlow
+supporting only a single CUDA version, and PyTorch providing more wheels for
+other CUDA versions and a CPU-only version in a separate wheelhouse (see
 [pytorch.org/get-started](https://pytorch.org/get-started/locally/)).
 CuPy provides a number of packages: [`cupy`](https://pypi.org/project/cupy/),
 [`cupy-cuda102`](https://pypi.org/project/cupy-cuda102/),
 [`cupy-cuda110`](https://pypi.org/project/cupy-cuda1110/),
 [`cupy-cuda111`](https://pypi.org/project/cupy-cuda111/),
-[`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/),
 [`cupy-rocm-4-3`](https://pypi.org/project/cupy-rocm-4-3/),
 [`cupy-rocm-5-0`](https://pypi.org/project/cupy-rocm-5-0/).
-Other projects do similar things - none of it works very well.
+As of CUDA 11, CUDA promises [minor version
+compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
+which allows building packages compatibility across an entire CUDA major
+version. CuPy now leverages this to produce wheels like 
+[`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
+[`cupy-cuda12x`](https://pypi.org/project/cupy-cuda12x/) that work for any CUDA
+11.x or CUDA 12.x version, respectively, that a user has installed.
 
-GPU packages tend to result in very large wheels. This is true in particular
-for deep learning packages, because they link in
-[cuDNN](https://developer.nvidia.com/cudnn). For example, the most recent
-`manylinux2014` wheels for TensorFlow are 588 MB
+GPU packages tend to result in very large wheels. This is in large part because
+compiled GPU libraries must support a number of architectures, leading to large
+binary sizes. These effects are compounded by the requirements imposed by the
+manylinux standard for Linux wheels, which results in many large libraries being
+bundled into a single wheel. This is true in particular for deep learning
+packages because they link in [cuDNN](https://developer.nvidia.com/cudnn). For
+example, recent `manylinux2014` wheels for TensorFlow are 588 MB
 ([2.11.0 files](https://pypi.org/project/tensorflow/2.11.0/#files)), and for
 PyTorch those are 890 MB ([1.13.0
-files](https://pypi.org/project/tensorflow/2.11.0/#files)). The problems around
+files](https://pypi.org/project/torch/1.13.0/#files)). The problems around
 and causes of GPU wheel sizes were discussed in depth in
 [this Packaging thread on Discourse](https://discuss.python.org/t/what-to-do-about-gpus-and-the-built-distributions-that-support-them/7125).
 
@@ -88,7 +102,7 @@ new version and bumps the default CUDA version used in the `torch` wheels, then
 any downstream package which also contains CUDA code will break unless it has
 an exact `==` pin on the older `torch` version, and then releases a new version
 of its own for the new CUDA version. Such synchronized releases are hard to do.
-If there where a way to declare a dependency on CUDA version (e.g., through a
+If there were a way to declare a dependency on CUDA version (e.g., through a
 metapackage on PyPI), that strong coupling between packages would not be
 necessary.
 
