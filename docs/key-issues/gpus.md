@@ -35,22 +35,25 @@ GPUs, and of CUDA. There is no way to mark a package as needing a GPU in sdist
 or wheel metadata, or as containing GPU-specific code (CUDA or otherwise). A
 GPU is hardware that may or may not be present in a machine that a Python
 package is being installed on - `pip` and other installers are unaware of this.
-If wheels contain CUDA code, they require the CUDA Toolkit (a specific version
-of it at that) to be installed. Again, installers do not know this and there is
+If wheels contain CUDA code, they require a specific version of the CUDA
+Toolkit (CTK) to be installed. Again, installers do not know this and there is
 no way to express this dependency. The same will be true for ROCm and other
 types of GPU hardware and languages.
 
 NVIDIA has made steps towards better support for CUDA on PyPI. Various
 library components of the CTK have been packaged as wheels and are now
 distributed on PyPI, such as
-[nvidia-cublas-cu11](https://pypi.org/project/nvidia-cublas-cu11/). Python
-wrappers around CUDA libraries have been consolidated into CUDA Python
-([website](https://developer.nvidia.com/cuda-python), 
-[PyPI package](https://pypi.org/project/cuda-python)), but this package assumes
-that the CUDA runtime and driver are already installed since it only provides
-Python bindings to the API. Many other projects remain hosted on
-[NVIDIA's Private PyPI Index](https://pypi.org/project/nvidia-pyindex/), which
-also includes rebuilds of TensorFlow and other packages.
+[nvidia-cublas-cu11](https://pypi.org/project/nvidia-cublas-cu11/), although
+special care is needed to consume them due to [lack of symlinks in
+wheels](native-dependencies/cpp_deps.md#current-state). Python wrappers around
+CUDA runtime and driver APIs have been consolidated into CUDA Python
+([website](https://developer.nvidia.com/cuda-python), [PyPI
+package](https://pypi.org/project/cuda-python)), but this package assumes that
+the CUDA driver and NVRTC are already installed since it only provides Python
+bindings to the APIs (and no bindings for CUDA libraries are provided as of
+yet). Many other projects remain hosted on [NVIDIA's Private PyPI
+Index](https://pypi.org/project/nvidia-pyindex/), which also includes rebuilds
+of TensorFlow and other packages.
 
 A single CUDA version supports a reasonable range of GPU architectures. New
 CUDA versions get released regularly, and - because they come with increased
@@ -72,15 +75,19 @@ CuPy provides a number of packages: [`cupy`](https://pypi.org/project/cupy/),
 [`cupy-cuda111`](https://pypi.org/project/cupy-cuda111/),
 [`cupy-rocm-4-3`](https://pypi.org/project/cupy-rocm-4-3/),
 [`cupy-rocm-5-0`](https://pypi.org/project/cupy-rocm-5-0/).
-As of CUDA 11, CUDA promises [minor version
+This works, but adds maintenance overhead to project developers and consumes
+more storage and network bandwidth for PyPI.org. Moreover, it also prevents
+downstream projects from properly declaring the dependency unless they also
+follow a similar multi-package approach.  As of CUDA 11, CUDA promises
+[minor version
 compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
-which allows building packages compatibility across an entire CUDA major
+which allows building packages compatible across an entire CUDA major
 version. CuPy now leverages this to produce wheels like 
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
 [`cupy-cuda12x`](https://pypi.org/project/cupy-cuda12x/) that work for any CUDA
 11.x or CUDA 12.x version, respectively, that a user has installed.
 
-GPU packages tend to result in very large wheels. This is in large part because
+GPU packages tend to result in very large wheels. This is mainly because
 compiled GPU libraries must support a number of architectures, leading to large
 binary sizes. These effects are compounded by the requirements imposed by the
 manylinux standard for Linux wheels, which results in many large libraries being
@@ -183,7 +190,7 @@ support in packaging tools, and lack of people to work on a solution.
 
 ## Relevant resources
 
-TODO
+- [How cuQuantum builds wheels](https://github.com/NVIDIA/cuQuantum/tree/main/extra/demo_build_with_wheels)
 
 
 ## Potential solutions or mitigations
