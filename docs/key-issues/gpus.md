@@ -78,27 +78,30 @@ CuPy provides a number of packages: [`cupy`](https://pypi.org/project/cupy/),
 This works, but adds maintenance overhead to project developers and consumes
 more storage and network bandwidth for PyPI.org. Moreover, it also prevents
 downstream projects from properly declaring the dependency unless they also
-follow a similar multi-package approach.  As of CUDA 11, CUDA promises
+follow a similar multi-package approach. As of CUDA 11, CUDA promises
 [minor version
 compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
 which allows building packages compatible across an entire CUDA major
 version. CuPy now leverages this to produce wheels like 
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
 [`cupy-cuda12x`](https://pypi.org/project/cupy-cuda12x/) that work for any CUDA
-11.x or CUDA 12.x version, respectively, that a user has installed.
+11.x or CUDA 12.x version, respectively, that a user has installed. Libraries
+that package PTX code cannot take advantage of this process yet, however ([see
+below](#additional-notes-on-cuda-compatibility)).
 
 GPU packages tend to result in very large wheels. This is mainly because
 compiled GPU libraries must support a number of architectures, leading to large
 binary sizes. These effects are compounded by the requirements imposed by the
 manylinux standard for Linux wheels, which results in many large libraries being
-bundled into a single wheel. This is true in particular for deep learning
-packages because they link in [cuDNN](https://developer.nvidia.com/cudnn). For
-example, recent `manylinux2014` wheels for TensorFlow are 588 MB
-([2.11.0 files](https://pypi.org/project/tensorflow/2.11.0/#files)), and for
-PyTorch those are 890 MB ([1.13.0
-files](https://pypi.org/project/torch/1.13.0/#files)). The problems around
-and causes of GPU wheel sizes were discussed in depth in
-[this Packaging thread on Discourse](https://discuss.python.org/t/what-to-do-about-gpus-and-the-built-distributions-that-support-them/7125).
+bundled into a single wheel (see [Native dependencies](native-dependencies) for
+details). This is true in particular for deep learning packages because they
+link in [cuDNN](https://developer.nvidia.com/cudnn). For example, recent
+`manylinux2014` wheels for TensorFlow are 588 MB ([2.11.0
+files](https://pypi.org/project/tensorflow/2.11.0/#files)), and for PyTorch
+those are 890 MB ([1.13.0
+files](https://pypi.org/project/torch/1.13.0/#files)). The problems around and
+causes of GPU wheel sizes were discussed in depth in [this Packaging thread on
+Discourse](https://discuss.python.org/t/what-to-do-about-gpus-and-the-built-distributions-that-support-them/7125).
 
 So far we have only discussed individual projects containing GPU code. Those
 projects are the most fundamental libraries in larger stacks of packages
@@ -201,3 +204,84 @@ Potential solutions on the PyPI side include:
 - make an environment marker or selector package approach work,
 - improve interoperability with other package managers, in order to be able to
   declare a dependency on a CUDA or ROCm version as externally provided,
+
+
+## Additional Notes on CUDA Compatibility
+
+Compatibility across CUDA versions is a common problem with numerous pitfalls to be aware of.
+There are three primary components of CUDA:
+
+1. The CUDA Toolkit (CTK): This component includes the CUDA runtime library
+   (libcudart.so) along with a range of other libraries and tools including
+   math libraries like cuBlas. libcudart.so and a few other core headers and
+   libraries compose the bare minimum required to compile CUDA code.
+2. The user-mode driver: This is the libcuda.so library. This library is
+   required to actually run CUDA code.
+3. The kernel-mode driver: The nvidia.ko file. This constitutes what is
+   typically considered a "driver" in common parlance when referring to other
+   peripherals connected to a computer.
+
+CUDA developers and users generally do not need to be aware of the kernel-mode driver.
+For the rest of this section, when referring to the "driver" we will always be referring to the user-mode driver libcuda.so.
+
+The CUDA runtime library makes no forward or backwards compatibility
+guarantees, meaning that libraries that dynamically link to the CUDA runtime
+may not work correctly if they are run on a system with a different CUDA
+runtime shared library than the one they were compiled against. In this scenario,
+users are responsible for having the right CUDA runtime library installed.  As
+a result, the official CUDA recommendation is to statically link the CUDA
+runtime (see
+[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#recommendations-for-building-a-minor-version-compatible-library)
+and
+[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#distributing-the-cuda-runtime-and-libraries)
+for more information).
+
+CUDA drivers have always been backwards compatible. Any code that runs when
+some driver version X is installed will always work correctly when run with
+some newer driver version Y>X. As briefly discussed above, as of CUDA 11.0
+CUDA also promises [minor version
+compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility)
+(MVC). This compatibility guarantees that CUDA code compiled using a certain
+version of the CUDA toolkit will be compatible with any driver version within
+the same release. This behavior is useful because it is often easier for users
+to upgrade their CUDA runtime than it is to upgrade the driver, especially on
+shared machines. For instance, the CUDA toolkit may be installed using conda,
+while the driver library must be installed to a system directory. An example of
+leveraging MVC would be compiling code against the CUDA 11.5 runtime library
+and then running it on a system with a CUDA 11.2 driver installed. However
+there are some caveats with MVC:
+
+- If the code uses any features that were introduced in a later driver version
+  than the installed version, it will still fail to run. However, it will be a
+  runtime failure in the form of a ` cudaErrorCallRequiresNewerDriver` CUDA
+  error, rather than a linker error or some similarly opaque issue. One
+  solution to this problem is for libraries to use runtime checks of the CUDA
+  version (using e.g. `cudaDriverGetVersion`) to only use supported features on
+  the installed driver.
+- NVRTC did not start supporting MVC until CUDA 11.3. Therefore, code that uses
+  NVRTC for JIT compilation must have been compiled with a CUDA version >= 11.3.
+- MVC only applies to CUDA code, not
+  [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
+  instruction set that the CUDA driver library can JIT-compile to machine
+  instructions. The standard [CUDA compilation
+  pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
+  includes the translation of CUDA code into PTX, but in addition developers
+  may write PTX code directly rather than CUDA for performance since it offers
+  avenues for optimization that are either unavailable or very difficult to
+  access with CUDA C(++). However, since PTX code does not support MVC, PTX
+  compiled with a particular CUDA runtime may not work if run on a system with
+  an older driver. This fact has two consequences. First, libraries that
+  package CUDA code will not benefit from MVC. Second, libraries that leverage
+  any sort of JIT-compilation pipeline that generates PTX code will _also_ not
+  support MVC. The latter can lead to more surprising behaviors, such as if a
+  user has a newer CUDA runtime than driver and then uses
+  [numba.cuda](https://numba.pydata.org/) to compile a Python function since
+  numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA
+  12, CUDA itself provides no solutions to this problem, although in some cases
+  there are tools that may be used to help (for instance, numba supports MVC in
+  CUDA 11 [starting with numba
+  0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023).
+  CUDA 12 introduces the
+  [nvJitLink](https://docs.nvidia.com/cuda/nvjitlink/index.html) library as the
+  long-term solution to this problem. nvJitLink may be leveraged to compile PTX
+  and link the resulting executables in a minor version compatible manner.
