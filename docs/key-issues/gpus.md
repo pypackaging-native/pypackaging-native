@@ -243,13 +243,13 @@ CUDA also promises [minor version
 compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility)
 (MVC). This compatibility guarantees that CUDA code compiled using a certain
 version of the CUDA toolkit will be compatible with any driver version within
-the same release. This behavior is useful because it is often easier for users
-to upgrade their CUDA runtime than it is to upgrade the driver, especially on
-shared machines. For instance, the CUDA toolkit may be installed using conda,
-while the driver library must be installed to a system directory. An example of
-leveraging MVC would be compiling code against the CUDA 11.5 runtime library
-and then running it on a system with a CUDA 11.2 driver installed. However
-there are some caveats with MVC:
+the same major release. This behavior is useful because it is often easier for
+users to upgrade their CUDA runtime than it is to upgrade the driver,
+especially on shared machines. For instance, the CUDA toolkit may be installed
+using conda, while the driver library cannot be. An example of leveraging MVC
+would be compiling code against the CUDA 11.5 runtime library and then running
+it on a system with a CUDA 11.2 driver installed. However there are some
+caveats with MVC:
 
 - If the code uses any features that were introduced in a later driver version
   than the installed version, it will still fail to run. However, it will be a
