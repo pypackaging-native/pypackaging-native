@@ -271,7 +271,7 @@ there are some caveats with MVC:
   access with CUDA C(++). However, since PTX code does not support MVC, PTX
   compiled with a particular CUDA runtime may not work if run on a system with
   an older driver. This fact has two consequences. First, libraries that
-  package CUDA code will not benefit from MVC. Second, libraries that leverage
+  package PTX code will not benefit from MVC. Second, libraries that leverage
   any sort of JIT-compilation pipeline that generates PTX code will _also_ not
   support MVC. The latter can lead to more surprising behaviors, such as if a
   user has a newer CUDA runtime than driver and then uses
