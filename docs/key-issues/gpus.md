@@ -253,7 +253,7 @@ caveats with MVC:
 
 - If the code uses any features that were introduced in a later driver version
   than the installed version, it will still fail to run. However, it will be a
-  runtime failure in the form of a ` cudaErrorCallRequiresNewerDriver` CUDA
+  runtime failure in the form of a `cudaErrorCallRequiresNewerDriver` CUDA
   error, rather than a linker error or some similarly opaque issue. One
   solution to this problem is for libraries to use runtime checks of the CUDA
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
