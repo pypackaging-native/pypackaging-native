@@ -251,33 +251,34 @@ would be compiling code against the CUDA 11.5 runtime library and then running
 it on a system with a CUDA 11.2 driver installed. However there are some
 caveats with MVC:
 
-- If the code uses any features that were introduced in a later driver version
-  than the installed version, it will still fail to run. However, it will be a
-  runtime failure in the form of a `cudaErrorCallRequiresNewerDriver` CUDA
-  error, rather than a linker error or some similarly opaque issue. One
+- If CUDA source code uses any features that were introduced in a later driver
+  version than the installed version, it will still fail to run. However, it
+  will be a runtime failure in the form of a `cudaErrorCallRequiresNewerDriver`
+  CUDA error, rather than a linker error or some similarly opaque issue. One
   solution to this problem is for libraries to use runtime checks of the CUDA
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
   the installed driver.
 - NVRTC did not start supporting MVC until CUDA 11.3. Therefore, code that uses
   NVRTC for JIT compilation must have been compiled with a CUDA version >= 11.3.
-- MVC only applies to CUDA code, not
+- MVC only applies to SASS binary code, not
   [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
   instruction set that the CUDA driver library can JIT-compile to machine
   instructions. The standard [CUDA compilation
   pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
-  includes the translation of CUDA code into PTX, but in addition developers
-  may write PTX code directly rather than CUDA for performance since it offers
-  avenues for optimization that are either unavailable or very difficult to
-  access with CUDA C(++). However, since PTX code does not support MVC, PTX
-  compiled with a particular CUDA runtime may not work if run on a system with
-  an older driver. This fact has two consequences. First, libraries that
-  package PTX code will not benefit from MVC. Second, libraries that leverage
-  any sort of JIT-compilation pipeline that generates PTX code will _also_ not
-  support MVC. The latter can lead to more surprising behaviors, such as if a
-  user has a newer CUDA runtime than driver and then uses
+  includes the translation of CUDA source code into PTX. In addition, to
+  achieve the best performance, developers may write PTX code directly or use
+  code generation tools that produce PTX because it offers avenues for
+  optimization that are either unavailable or very difficult to access with
+  CUDA C/C++.  However, since MVC does not support PTX code, PTX generated
+  using a particular CUDA toolkit may not work if run on a system with an older
+  driver.  This fact has two consequences. First, libraries that package PTX
+  code will not benefit from MVC. Second, libraries that leverage any sort of
+  JIT-compilation pipeline that generates PTX code will _also_ not support MVC.
+  The latter can lead to more surprising behaviors, such as if a user has a
+  newer CUDA toolkit than driver and then uses
   [numba.cuda](https://numba.pydata.org/) to compile a Python function since
-  numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA
-  12, CUDA itself provides no solutions to this problem, although in some cases
+  numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA 12,
+  CUDA itself provides no solutions to this problem, although in some cases
   there are tools that may be used to help (for instance, numba supports MVC in
   CUDA 11 [starting with numba
   0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023).
