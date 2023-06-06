@@ -63,7 +63,7 @@ different between two wheels, the wheel tags and filename will be identical.
 Hence it is not possible to upload more than one of those wheels under the same
 package name.
 
-Historically, this required projects to produce packages specific CUDA minor
+Historically, this required projects to produce packages specific to CUDA minor
 versions. Projects would either support only one CUDA version on PyPI, or create
 different packages. PyTorch and TensorFlow do the former, with TensorFlow
 supporting only a single CUDA version, and PyTorch providing more wheels for
@@ -213,7 +213,7 @@ There are three primary components of CUDA:
 
 1. The CUDA Toolkit (CTK): This component includes the CUDA runtime library
    (libcudart.so) along with a range of other libraries and tools including
-   math libraries like cuBlas. libcudart.so and a few other core headers and
+   math libraries like cuBLAS. libcudart.so and a few other core headers and
    libraries compose the bare minimum required to compile CUDA code.
 2. The user-mode driver: This is the libcuda.so library. This library is
    required to actually run CUDA code.
@@ -221,10 +221,10 @@ There are three primary components of CUDA:
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
-CUDA developers and users generally do not need to be aware of the kernel-mode driver.
+CUDA developers and users usually do not need to be aware of the kernel-mode driver.
 For the rest of this section, when referring to the "driver" we will always be referring to the user-mode driver libcuda.so.
 
-The CUDA runtime library makes no forward or backwards compatibility
+The CUDA runtime library makes no forward or backward compatibility
 guarantees, meaning that libraries that dynamically link to the CUDA runtime
 may not work correctly if they are run on a system with a different CUDA
 runtime shared library than the one they were compiled against. In this scenario,
@@ -236,20 +236,21 @@ and
 [here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#distributing-the-cuda-runtime-and-libraries)
 for more information).
 
-CUDA drivers have always been backwards compatible. Any code that runs when
-some driver version X is installed will always work correctly when run with
-some newer driver version Y>X. As briefly discussed above, as of CUDA 11.0
-CUDA also promises [minor version
+CUDA drivers have always been backward compatible. Any code that runs with some
+driver version X is installed will always run correctly with some newer driver
+version Y>X. As briefly discussed above, as of CUDA 11.0 CUDA also promises
+[minor version
 compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility)
 (MVC). This compatibility guarantees that CUDA code compiled using a certain
-version of the CUDA toolkit will be compatible with any driver version within
-the same major release. This behavior is useful because it is often easier for
-users to upgrade their CUDA runtime than it is to upgrade the driver,
-especially on shared machines. For instance, the CUDA toolkit may be installed
-using conda, while the driver library cannot be. An example of leveraging MVC
-would be compiling code against the CUDA 11.5 runtime library and then running
-it on a system with a CUDA 11.2 driver installed. However there are some
-caveats with MVC:
+version of the CTK will be compatible with any driver version within the same
+major release. This behavior is useful because it is often easier for users to
+upgrade their CUDA runtime than it is to upgrade the driver, especially on
+shared machines. For instance, the CTK may be installed using conda, while the
+driver library cannot be. An example of leveraging MVC would be compiling code
+against the CUDA 11.5 runtime library and then running it on a system with a
+CUDA 11.2 driver installed.
+
+However there are some caveats with MVC:
 
 - If CUDA source code uses any features that were introduced in a later driver
   version than the installed version, it will still fail to run. However, it
@@ -259,28 +260,29 @@ caveats with MVC:
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
   the installed driver.
 - NVRTC did not start supporting MVC until CUDA 11.3. Therefore, code that uses
-  NVRTC for JIT compilation must have been compiled with a CUDA version >= 11.3.
-- MVC only applies to SASS binary code, not
+  NVRTC for JIT compilation must have been compiled with a CUDA version >=
+  11.3. Moreover, NVRTC only works for a single translation unit because
+  linking is not possible without nvJitLink (see below).
+- MVC only applies to machine instructions (SASS), not
   [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
-  instruction set that the CUDA driver library can JIT-compile to machine
-  instructions. The standard [CUDA compilation
+  instruction set that the CUDA driver library can JIT-compile to SASS). The
+  standard [CUDA compilation
   pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
-  includes the translation of CUDA source code into PTX. In addition, to
-  achieve the best performance, developers may write PTX code directly or use
-  code generation tools that produce PTX because it offers avenues for
-  optimization that are either unavailable or very difficult to access with
-  CUDA C/C++.  However, since MVC does not support PTX code, PTX generated
-  using a particular CUDA toolkit may not work if run on a system with an older
-  driver.  This fact has two consequences. First, libraries that package PTX
+  includes the translation of CUDA source code into PTX. In addition, some
+  projects choose to include PTX code generated either at build time or run
+  time. However, since MVC does not cover JIT-compiled PTX code, PTX generated
+  using a particular CTK may not work with an older
+  driver.
+  This fact has two consequences. First, libraries that package PTX
   code will not benefit from MVC. Second, libraries that leverage any sort of
   JIT-compilation pipeline that generates PTX code will _also_ not support MVC.
-  The latter can lead to more surprising behaviors, such as if a user has a
-  newer CUDA toolkit than driver and then uses
+  The latter can lead to more surprising behaviors, such as when a user has a
+  newer CTK than the installed driver and then uses
   [numba.cuda](https://numba.pydata.org/) to compile a Python function since
-  numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA 12,
-  CUDA itself provides no solutions to this problem, although in some cases
-  there are tools that may be used to help (for instance, numba supports MVC in
-  CUDA 11 [starting with numba
+  Numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA 12,
+  CUDA itself provides no general solutions to this problem, although in some
+  cases there are tools that may help (for instance, Numba supports
+  MVC in CUDA 11 [starting with numba
   0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023).
   CUDA 12 introduces the
   [nvJitLink](https://docs.nvidia.com/cuda/nvjitlink/index.html) library as the
