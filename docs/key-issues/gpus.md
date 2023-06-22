@@ -35,7 +35,7 @@ GPUs, and of CUDA. There is no way to mark a package as needing a GPU in sdist
 or wheel metadata, or as containing GPU-specific code (CUDA or otherwise). A
 GPU is hardware that may or may not be present in a machine that a Python
 package is being installed on - `pip` and other installers are unaware of this.
-If wheels contain CUDA code, they require a specific version of the CUDA
+If wheels contain CUDA code, they may require a specific version of the CUDA
 Toolkit (CTK) to be installed. Again, installers do not know this and there is
 no way to express this dependency. The same will be true for ROCm and other
 types of GPU hardware and languages.
@@ -51,7 +51,7 @@ CUDA runtime and driver APIs have been consolidated into CUDA Python
 package](https://pypi.org/project/cuda-python)), but this package assumes that
 the CUDA driver and NVRTC are already installed since it only provides Python
 bindings to the APIs (and no bindings for CUDA libraries are provided as of
-yet). Many other projects remain hosted on [NVIDIA's Private PyPI
+yet). Many other projects remain hosted on [NVIDIA's PyPI
 Index](https://pypi.org/project/nvidia-pyindex/), which also includes rebuilds
 of TensorFlow and other packages.
 
@@ -79,15 +79,15 @@ This works, but adds maintenance overhead to project developers and consumes
 more storage and network bandwidth for PyPI.org. Moreover, it also prevents
 downstream projects from properly declaring the dependency unless they also
 follow a similar multi-package approach. As of CUDA 11, CUDA promises
-[minor version
-compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
+[Minor Version Compatibility
+(MVC)](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
 which allows building packages compatible across an entire CUDA major
 version. CuPy now leverages this to produce wheels like 
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
 [`cupy-cuda12x`](https://pypi.org/project/cupy-cuda12x/) that work for any CUDA
-11.x or CUDA 12.x version, respectively, that a user has installed. Libraries
-that package PTX code cannot take advantage of this process yet, however ([see
-below](#additional-notes-on-cuda-compatibility)).
+11.x or CUDA 12.x version, respectively, that a user has installed. However,
+libraries that package PTX code cannot take advantage of this process yet
+([see below](#additional-notes-on-cuda-compatibility)).
 
 GPU packages tend to result in very large wheels. This is mainly because
 compiled GPU libraries must support a number of architectures, leading to large
@@ -193,7 +193,7 @@ support in packaging tools, and lack of people to work on a solution.
 
 ## Relevant resources
 
-- [How cuQuantum builds wheels](https://github.com/NVIDIA/cuQuantum/tree/main/extra/demo_build_with_wheels)
+- [How to use cuQuantum wheels](https://github.com/NVIDIA/cuQuantum/tree/main/extra/demo_build_with_wheels)
 
 
 ## Potential solutions or mitigations
@@ -214,10 +214,10 @@ There are three primary components of CUDA:
 1. The CUDA Toolkit (CTK): This component includes the CUDA runtime library
    (libcudart.so) along with a range of other libraries and tools including
    math libraries like cuBLAS. libcudart.so and a few other core headers and
-   libraries compose the bare minimum required to compile CUDA code.
-2. The user-mode driver: This is the libcuda.so library. This library is
-   required to actually run CUDA code.
-3. The kernel-mode driver: The nvidia.ko file. This constitutes what is
+   libraries are the bare minimum required to compile and link CUDA code.
+2. The User-Mode Driver (UMD): This is the libcuda.so library. This library is
+   required to load and run CUDA code.
+3. The Kernel-Mode Driver (KMD): The nvidia.ko file. This constitutes what is
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
@@ -265,7 +265,7 @@ However there are some caveats with MVC:
   linking is not possible without nvJitLink (see below).
 - MVC only applies to machine instructions (SASS), not
   [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
-  instruction set that the CUDA driver library can JIT-compile to SASS). The
+  instruction set that the CUDA driver library can JIT-compile to SASS. The
   standard [CUDA compilation
   pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
   includes the translation of CUDA source code into PTX. In addition, some
