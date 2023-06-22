@@ -30,7 +30,7 @@ Packaging such projects for PyPI has been, and still is, quite challenging.
 
 ## Current state
 
-As of May 2023, PyPI and Python packaging tools are completely unaware of
+As of mid-2023, PyPI and Python packaging tools are completely unaware of
 GPUs, and of CUDA. There is no way to mark a package as needing a GPU in sdist
 or wheel metadata, or as containing GPU-specific code (CUDA or otherwise). A
 GPU is hardware that may or may not be present in a machine that a Python
@@ -56,8 +56,8 @@ Index](https://pypi.org/project/nvidia-pyindex/), which also includes rebuilds
 of TensorFlow and other packages.
 
 A single CUDA version supports a reasonable range of GPU architectures. New
-CUDA versions get released regularly, and - because they come with increased
-performance or new functionality - it may be necessary or desirable to build
+CUDA versions get released regularly, and because they come with increased
+performance or new functionality it may be necessary or desirable to build
 new wheels for that CUDA version. If only the supported CUDA version is
 different between two wheels, the wheel tags and filename will be identical.
 Hence it is not possible to upload more than one of those wheels under the same
@@ -96,10 +96,10 @@ manylinux standard for Linux wheels, which results in many large libraries being
 bundled into a single wheel (see [Native dependencies](native-dependencies) for
 details). This is true in particular for deep learning packages because they
 link in [cuDNN](https://developer.nvidia.com/cudnn). For example, recent
-`manylinux2014` wheels for TensorFlow are 588 MB ([2.11.0
-files](https://pypi.org/project/tensorflow/2.11.0/#files)), and for PyTorch
-those are 890 MB ([1.13.0
-files](https://pypi.org/project/torch/1.13.0/#files)). The problems around and
+`manylinux2014` wheels for TensorFlow are 588 MB ([wheels for 2.11.0
+](https://pypi.org/project/tensorflow/2.11.0/#files)), and for PyTorch
+those are 890 MB ([wheels for 1.13.0
+](https://pypi.org/project/torch/1.13.0/#files)). The problems around and
 causes of GPU wheel sizes were discussed in depth in [this Packaging thread on
 Discourse](https://discuss.python.org/t/what-to-do-about-gpus-and-the-built-distributions-that-support-them/7125).
 
@@ -221,8 +221,8 @@ There are three primary components of CUDA:
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
-CUDA developers and users usually do not need to be aware of the kernel-mode driver.
-For the rest of this section, when referring to the "driver" we will always be referring to the user-mode driver libcuda.so.
+CUDA developers and users usually do not need to be aware of the KMD.
+For the rest of this section, when referring to the "driver" we will always be referring to the UMD.
 
 The CUDA runtime library makes no forward or backward compatibility
 guarantees, meaning that libraries that dynamically link to the CUDA runtime
@@ -259,10 +259,10 @@ However there are some caveats with MVC:
   solution to this problem is for libraries to use runtime checks of the CUDA
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
   the installed driver.
-- NVRTC did not start supporting MVC until CUDA 11.3. Therefore, code that uses
+- NVRTC did not start supporting MVC until CUDA 11.2. Therefore, code that uses
   NVRTC for JIT compilation must have been compiled with a CUDA version >=
-  11.3. Moreover, NVRTC only works for a single translation unit because
-  linking is not possible without nvJitLink (see below).
+  11.2. Moreover, NVRTC only works for a single translation unit that requires
+  no linking because linking is not possible without nvJitLink (see below).
 - MVC only applies to machine instructions (SASS), not
   [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
   instruction set that the CUDA driver library can JIT-compile to SASS. The
