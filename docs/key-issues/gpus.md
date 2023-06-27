@@ -56,8 +56,8 @@ Index](https://pypi.org/project/nvidia-pyindex/), which also includes rebuilds
 of TensorFlow and other packages.
 
 A single CUDA version supports a reasonable range of GPU architectures. New
-CUDA versions get released regularly, and because they come with increased
-performance or new functionality it may be necessary or desirable to build
+CUDA versions get released regularly, and because they come with bug fixes, improved
+performance, or new functionalities, it may be necessary or desirable to build
 new wheels for that CUDA version. If only the supported CUDA version is
 different between two wheels, the wheel tags and filename will be identical.
 Hence it is not possible to upload more than one of those wheels under the same
@@ -69,7 +69,7 @@ different packages. PyTorch and TensorFlow do the former, with TensorFlow
 supporting only a single CUDA version, and PyTorch providing more wheels for
 other CUDA versions and a CPU-only version in a separate wheelhouse (see
 [pytorch.org/get-started](https://pytorch.org/get-started/locally/)).
-CuPy provides a number of packages: [`cupy`](https://pypi.org/project/cupy/),
+CuPy provides a number of packages:
 [`cupy-cuda102`](https://pypi.org/project/cupy-cuda102/),
 [`cupy-cuda110`](https://pypi.org/project/cupy-cuda1110/),
 [`cupy-cuda111`](https://pypi.org/project/cupy-cuda111/),
@@ -82,7 +82,7 @@ follow a similar multi-package approach. As of CUDA 11, CUDA promises
 [Minor Version Compatibility
 (MVC)](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
 which allows building packages compatible across an entire CUDA major
-version. CuPy now leverages this to produce wheels like 
+version. For example, CuPy now leverages this to produce wheels like 
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
 [`cupy-cuda12x`](https://pypi.org/project/cupy-cuda12x/) that work for any CUDA
 11.x or CUDA 12.x version, respectively, that a user has installed. However,
@@ -256,7 +256,7 @@ However there are some caveats with MVC:
   version than the installed version, it will still fail to run. However, it
   will be a runtime failure in the form of a `cudaErrorCallRequiresNewerDriver`
   CUDA error, rather than a linker error or some similarly opaque issue. One
-  solution to this problem is for libraries to use runtime checks of the CUDA
+  solution to this problem is for libraries to use runtime checks of the driver
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
   the installed driver.
 - NVRTC did not start supporting MVC until CUDA 11.2. Therefore, code that uses
@@ -265,7 +265,7 @@ However there are some caveats with MVC:
   no linking because linking is not possible without nvJitLink (see below).
 - MVC only applies to machine instructions (SASS), not
   [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
-  instruction set that the CUDA driver library can JIT-compile to SASS. The
+  instruction set that the CUDA driver can JIT-compile to SASS. The
   standard [CUDA compilation
   pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
   includes the translation of CUDA source code into PTX. In addition, some
@@ -283,7 +283,7 @@ However there are some caveats with MVC:
   CUDA itself provides no general solutions to this problem, although in some
   cases there are tools that may help (for instance, Numba supports
   MVC in CUDA 11 [starting with numba
-  0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023).
+  0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023)).
   CUDA 12 introduces the
   [nvJitLink](https://docs.nvidia.com/cuda/nvjitlink/index.html) library as the
   long-term solution to this problem. nvJitLink may be leveraged to compile PTX
