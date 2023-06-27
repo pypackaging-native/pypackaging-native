@@ -222,7 +222,7 @@ There are three primary components of CUDA:
    peripherals connected to a computer.
 
 As far as MVC is concerned, KMD can be ignored providing that it meets [CUDA's requirement](https://docs.nvidia.com/deploy/cuda-compatibility/index.html).
-For the rest of this section, therefore, the "driver" and the UMD are considered interchangeable.
+For the rest of this section, therefore, the "driver" will always be referring to the UMD.
 
 The CUDA runtime library makes no forward or backward compatibility
 guarantees, meaning that libraries that dynamically link to the CUDA runtime
