@@ -65,7 +65,7 @@ package name.
 
 Historically, this required projects to produce packages specific to CUDA minor
 versions. Projects would either support only one CUDA version on PyPI, or create
-different packages. PyTorch and TensorFlow do the former, with TensorFlow
+and self-host different packages. PyTorch and TensorFlow do the former, with TensorFlow
 supporting only a single CUDA version, and PyTorch providing more wheels for
 other CUDA versions and a CPU-only version in a separate wheelhouse (see
 [pytorch.org/get-started](https://pytorch.org/get-started/locally/)).
@@ -221,8 +221,8 @@ There are three primary components of CUDA:
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
-CUDA developers and users usually do not need to be aware of the KMD.
-For the rest of this section, when referring to the "driver" we will always be referring to the UMD.
+As far as MVC is concerned, KMD can be ignored providing that it meets [CUDA's requirement](https://docs.nvidia.com/deploy/cuda-compatibility/index.html).
+For the rest of this section, therefore, the "driver" and the UMD are considered interchangeable.
 
 The CUDA runtime library makes no forward or backward compatibility
 guarantees, meaning that libraries that dynamically link to the CUDA runtime
