@@ -144,7 +144,7 @@ Other package managers typically do have support for CUDA:
 - Ubuntu: provides one CUDA version per Ubuntu release: [`nvidia-cuda-toolkit`
   package](https://packages.ubuntu.com/jammy/nvidia-cuda-toolkit),
 - Arch Linux: provides one CUDA version: [`cuda`
-  package](https://archlinux.org/packages/community/x86_64/cuda/).
+  package](https://archlinux.org/packages/extra/x86_64/cuda/).
 
 Those package managers typically also provide CUDA-related development tools,
 and build all the most popular deep learning and numerical computing packages
