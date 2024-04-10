@@ -104,5 +104,5 @@ The content for this website is
 
 ## Acknowledgements
 
-- Initial development of this website was sponsored by [Intel](https://www.intel.com),
-- Initial development effort was led by [Quansight Labs](https://labs.quansight.org/),
+- Initial development of this website was sponsored by [Intel](https://www.intel.com)
+- Initial development effort was led by [Quansight Labs](https://labs.quansight.org/)
