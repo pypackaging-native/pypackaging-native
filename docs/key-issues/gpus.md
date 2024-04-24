@@ -80,9 +80,9 @@ provides a number of packages:
 adds maintenance overhead to project developers and consumes more storage and
 network bandwidth for PyPI.org. Moreover, it also prevents downstream projects
 from properly declaring the dependency unless they also follow a similar
-multi-package approach. As of CUDA 11, CUDA promises [Minor Version
+multi-package approach. As of CUDA 11, CUDA promises [CUDA Enhanced
 Compatibility
-(MVC)](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
+(CEC)](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
 which allows building packages compatible across an entire CUDA major version.
 For example, CuPy now leverages this to produce wheels like
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
@@ -239,45 +239,44 @@ to be aware of. There are three primary components of CUDA:
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
-As far as MVC is concerned, KMD can be ignored providing that it meets [CUDA's
+For most compatibility at the level of source code, the KMD can be ignored
+providing that it meets [CUDA's
 requirement](https://docs.nvidia.com/deploy/cuda-compatibility/index.html).
 For the rest of this section, therefore, the "driver" will always be referring
 to the UMD.
 
-The CUDA runtime library makes no forward or backward compatibility guarantees,
-meaning that libraries that dynamically link to the CUDA runtime may not work
-correctly if they are run on a system with a different CUDA runtime shared
-library than the one they were compiled against. In this scenario, users are
-responsible for having the right CUDA runtime library installed.  As a result,
-the official CUDA recommendation is to statically link the CUDA runtime (see
-[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#recommendations-for-building-a-minor-version-compatible-library)
-and
-[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#distributing-the-cuda-runtime-and-libraries)
-for more information).
-
 CUDA drivers have always been backward compatible. Any code that runs with some
 driver version X is installed will always run correctly with some newer driver
-version Y>X. As briefly discussed above, as of CUDA 11.0 CUDA also promises
-[minor version
-compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility)
-(MVC). This compatibility guarantees that CUDA code compiled using a certain
-version of the CTK will be compatible with any driver version within the same
-major release. This behavior is useful because it is often easier for users to
-upgrade their CUDA runtime than it is to upgrade the driver, especially on
-shared machines. For instance, the CTK may be installed using conda, while the
-driver library cannot be. An example of leveraging MVC would be compiling code
-against the CUDA 11.5 runtime library and then running it on a system with a
-CUDA 11.2 driver installed.
+version Y>X.
+
+[As briefly discussed above](#current-state), as of CUDA 11 the CUDA toolkit is
+covered under the [CUDA enhanced
+compatibility](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#cuda-toolkit-versioning)
+rules. Enhanced compatibility includes two separate promises:
+
+1. As mentioned in [](#current-state), packages built with a given version of
+   the CTK will run on all future versions of the runtime within the
+   same major family. For instance, code compiled against the 11.1 CUDA runtime
+   or math libraries will still work with a 11.4 installation.
+2. Code built using any version of the CUDA runtime will work on any driver
+   within the same major family. This behavior is useful because it is often
+   easier for users to upgrade their CUDA runtime than it is to upgrade the
+   driver, especially on shared machines. For instance, the CTK may be
+   installed using conda, while the driver library cannot be. An example of
+   leveraging MVC would be compiling code against the CUDA 11.5 runtime library
+   and then running it on a system with a CUDA 11.2 driver installed.
 
 However there are some caveats with MVC:
 
-- If CUDA source code uses any features that were introduced in a later driver
+- If CUDA source code uses any runtime features that rely on a later driver
   version than the installed version, it will still fail to run. However, it
   will be a runtime failure in the form of a `cudaErrorCallRequiresNewerDriver`
   CUDA error, rather than a linker error or some similarly opaque issue. One
   solution to this problem is for libraries to use runtime checks of the driver
   version (using e.g. `cudaDriverGetVersion`) to only use supported features on
   the installed driver.
+- Any usage of CUDA runtime functions that were introduced in a later version
+  of the CTK must also be guarded with appropriate runtime version checks.
 - NVRTC did not start supporting MVC until CUDA 11.2. Therefore, code that uses
   NVRTC for JIT compilation must have been compiled with a CUDA version >=
   11.2. Moreover, NVRTC only works for a single translation unit that requires
