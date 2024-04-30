@@ -280,8 +280,8 @@ TODO
 
 - Larger changes to PyPI/wheels to get to parity with system package managers.
   This will require dealing with several "meta topics", like
-  [a build farm](meta-topics/no_build_farm.md) and
-  [PyPI's author-led social model](meta-topics/pypi_social_model.md),
+  [a build farm](../../meta-topics/no_build_farm.md) and
+  [PyPI's author-led social model](../../meta-topics/pypi_social_model.md),
   in addition to implementing something like virtual packages.
 - Making it possible to express dependencies on libraries outside of PyPI.
 - Making a distinction on PyPI between pure Python packages and other packages.
