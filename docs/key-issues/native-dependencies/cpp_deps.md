@@ -234,6 +234,10 @@ The RAPIDS projects was forced to drop wheels completely from May 2019 to Oct
 2022, because the `manylinux` required a too old C++ version, and made it
 impossible to create compliant wheels with the RAPIDS C++14 code base. See
 [this blog post for details](https://medium.com/rapids-ai/rapids-0-7-release-drops-pip-packages-47fc966e9472).
+RAPIDS eventually added back support relying on newer versions of the
+`manylinux` standard, but while it used the broadly applicable `manylinux2014`
+standard on x86 architectures, notably on arm architectures it used the new
+"perennial manylinux" because a newer glibc version was required.
 
 Apache Arrow's issues with wheels and the amount of effort they take were laid out
 in detail in [this mailing list post by Wes McKinney](https://lists.apache.org/thread/mxvp4mcx01mvox8jckgszyg0h65ddlkn).

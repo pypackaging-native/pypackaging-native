@@ -80,9 +80,9 @@ provides a number of packages:
 adds maintenance overhead to project developers and consumes more storage and
 network bandwidth for PyPI.org. Moreover, it also prevents downstream projects
 from properly declaring the dependency unless they also follow a similar
-multi-package approach. As of CUDA 11, CUDA promises [Minor Version
-Compatibility
-(MVC)](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility),
+multi-package approach. As of CUDA 11, CUDA promises [binary compatibility
+across minor
+versions](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#cuda-toolkit-versioning),
 which allows building packages compatible across an entire CUDA major version.
 For example, CuPy now leverages this to produce wheels like
 [`cupy-cuda11x`](https://pypi.org/project/cupy-cuda11x/) and
@@ -239,71 +239,87 @@ to be aware of. There are three primary components of CUDA:
    typically considered a "driver" in common parlance when referring to other
    peripherals connected to a computer.
 
-As far as MVC is concerned, KMD can be ignored providing that it meets [CUDA's
+For most compatibility at the level of source code, the KMD can be ignored
+providing that it meets [CUDA's
 requirement](https://docs.nvidia.com/deploy/cuda-compatibility/index.html).
 For the rest of this section, therefore, the "driver" will always be referring
 to the UMD.
 
-The CUDA runtime library makes no forward or backward compatibility guarantees,
-meaning that libraries that dynamically link to the CUDA runtime may not work
-correctly if they are run on a system with a different CUDA runtime shared
-library than the one they were compiled against. In this scenario, users are
-responsible for having the right CUDA runtime library installed.  As a result,
-the official CUDA recommendation is to statically link the CUDA runtime (see
-[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#recommendations-for-building-a-minor-version-compatible-library)
-and
-[here](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#distributing-the-cuda-runtime-and-libraries)
-for more information).
-
-CUDA drivers have always been backward compatible. Any code that runs with some
+CUDA drivers have always promised binary compatibility: any code that runs with some
 driver version X is installed will always run correctly with some newer driver
-version Y>X. As briefly discussed above, as of CUDA 11.0 CUDA also promises
-[minor version
-compatibility](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility)
-(MVC). This compatibility guarantees that CUDA code compiled using a certain
-version of the CTK will be compatible with any driver version within the same
-major release. This behavior is useful because it is often easier for users to
-upgrade their CUDA runtime than it is to upgrade the driver, especially on
-shared machines. For instance, the CTK may be installed using conda, while the
-driver library cannot be. An example of leveraging MVC would be compiling code
-against the CUDA 11.5 runtime library and then running it on a system with a
-CUDA 11.2 driver installed.
+version Y>X. [As briefly discussed above](#current-state), though, as of CUDA
+11 the CUDA toolkit makes a number of additional compatibility guarantees.
 
-However there are some caveats with MVC:
+The first is what is typically termed [Minor Version Compatibility (MVC)
+](https://docs.nvidia.com/deploy/cuda-compatibility/index.html#minor-version-compatibility).
+MVC promises that code built using any version of the CUDA runtime will work on
+any driver within the same major family. This behavior is useful because it is
+often easier for users to upgrade their CUDA runtime than it is to upgrade the
+driver, especially on shared machines. For instance, the CTK may be installed
+using conda, while the driver library cannot be. An example of leveraging MVC
+would be compiling code against the CUDA 11.5 runtime library and then running
+it on a system with a CUDA 11.2 driver installed. MVC allows distributors of
+Python packages to only require that users have a minimum required driver
+installed rather than needing a more exact match as in prior versions of CUDA.
 
-- If CUDA source code uses any features that were introduced in a later driver
-  version than the installed version, it will still fail to run. However, it
-  will be a runtime failure in the form of a `cudaErrorCallRequiresNewerDriver`
-  CUDA error, rather than a linker error or some similarly opaque issue. One
-  solution to this problem is for libraries to use runtime checks of the driver
-  version (using e.g. `cudaDriverGetVersion`) to only use supported features on
-  the installed driver.
-- NVRTC did not start supporting MVC until CUDA 11.2. Therefore, code that uses
-  NVRTC for JIT compilation must have been compiled with a CUDA version >=
-  11.2. Moreover, NVRTC only works for a single translation unit that requires
-  no linking because linking is not possible without nvJitLink (see below).
-- MVC only applies to machine instructions (SASS), not
-  [PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
-  instruction set that the CUDA driver can JIT-compile to SASS. The
-  standard [CUDA compilation
-  pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
-  includes the translation of CUDA source code into PTX. In addition, some
-  projects choose to include PTX code generated either at build time or run
-  time. However, since MVC does not cover JIT-compiled PTX code, PTX generated
-  using a particular CTK may not work with an older
-  driver.
-  This fact has two consequences. First, libraries that package PTX
-  code will not benefit from MVC. Second, libraries that leverage any sort of
-  JIT-compilation pipeline that generates PTX code will _also_ not support MVC.
-  The latter can lead to more surprising behaviors, such as when a user has a
-  newer CTK than the installed driver and then uses
-  [numba.cuda](https://numba.pydata.org/) to compile a Python function since
-  Numba compiles CUDA kernels to PTX as part of its pipeline. Prior to CUDA 12,
-  CUDA itself provides no general solutions to this problem, although in some
-  cases there are tools that may help (for instance, Numba supports
-  MVC in CUDA 11 [starting with numba
-  0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023)).
-  CUDA 12 introduces the
-  [nvJitLink](https://docs.nvidia.com/cuda/nvjitlink/index.html) library as the
-  long-term solution to this problem. nvJitLink may be leveraged to compile PTX
-  and link the resulting executables in a minor version compatible manner.
+Beyond CTK/driver compatibility, [CUDA 11 also added increased support for
+compatibility between versions of the CTK
+itself](https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#cuda-toolkit-versioning).
+CUDA 11 promised forward binary compatibility across minor versions: code
+compiled with 11.x will also work on 11.y>11.x (for which the driver
+compatibility guaranteed by MVC was a prerequisite). This binary compatibility
+also means that binaries are backwards compatible, within certain limitations.
+In particular, binaries compiled with a newer CTK will run on an older CTK, so
+long as no features are used that require the newer CTK. If your code uses
+features that require a newer CTK (or a newer driver, in MVC contexts), then
+you must include suitable runtime checks in your code (using e.g.
+`cudaDriverGetVersion`) to ensure compatibility. The combination of these CTK
+compatibility promises and MVC is most often termed CUDA Enhanced Compatibility
+(CEC).
+
+The above compatibility guarantees refer to binary compatibility for CUDA code
+compiled down to NVIDIA's machine instructions (SASS). However, there are other
+important situations that are not covered by these guarantees
+
+### NVRTC 
+
+NVRTC did not start supporting MVC until CUDA 11.2. Therefore, code that uses
+NVRTC for JIT compilation must have been compiled with a CUDA version >= 11.2.
+Moreover, NVRTC only works for a single translation unit that requires no
+linking because linking is not possible without nvJitLink (see below).
+
+### PTX
+
+CEC does not apply to
+[PTX](https://docs.nvidia.com/cuda/parallel-thread-execution/). PTX is an
+instruction set that the CUDA driver can JIT-compile to SASS. The standard
+[CUDA compilation
+pipeline](https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#the-cuda-compilation-trajectory)
+includes the translation of CUDA source code into PTX from which SASS is
+generated, but for various reasons projects may choose to include PTX code in
+their final libraries to be JIT-compiled at runtime instead (one reason is
+because PTX can be compiled for the architecture on the target system at
+runtime instead of having to precompile it for a subset of supported
+architectures at compile-time). However, since MVC does not cover JIT-compiled
+PTX code, PTX generated using a particular CTK may not work with an older
+driver. This fact has two consequences:
+
+1. Libraries that package PTX code will not benefit from MVC.
+2. Libraries that leverage any sort of JIT-compilation pipeline that generates
+   PTX code will _also_ not support MVC. This can lead to particularly
+   surprising behaviors, such as when a user has a newer CTK than the installed
+   driver and then uses [numba.cuda](https://numba.pydata.org/) to compile a
+   Python function since Numba compiles CUDA kernels to PTX as part of its
+   pipeline.
+
+Prior to CUDA 12, CUDA itself provides no general solutions to
+this problem, although in some cases there are tools that may help (for
+instance, Numba supports MVC in CUDA 11 [starting with numba
+0.57](https://numba.readthedocs.io/en/stable/release-notes.html#version-0-57-0-1-may-2023)).
+CUDA 12 introduced the
+[nvJitLink](https://docs.nvidia.com/cuda/nvjitlink/index.html) library as the
+long-term solution to this problem. nvJitLink may be leveraged to compile PTX
+and link the resulting executables in a minor version compatible manner.
+The [`pynvjitlink` package](https://github.com/rapidsai/pynvjitlink/) is a
+Python wrapper for nvjitlink that can be used to enable enhanced compatibility
+for numba's JIT-compiled kernels.
