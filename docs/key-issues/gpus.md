@@ -46,7 +46,7 @@ library components of the CTK have been packaged as wheels and are now
 distributed on PyPI, such as
 [nvidia-cublas-cu11](https://pypi.org/project/nvidia-cublas-cu11/), although
 special care is needed to consume them due to [lack of symlinks in
-wheels](native-dependencies/cpp_deps.md#current-state). Python wrappers around
+wheels](../native-dependencies/cpp_deps.md#current-state). Python wrappers around
 CUDA runtime and driver APIs have been consolidated into CUDA Python
 ([website](https://developer.nvidia.com/cuda-python), [PyPI
 package](https://pypi.org/project/cuda-python)), but this package assumes that
@@ -96,7 +96,7 @@ compiled GPU libraries must support a number of architectures, leading to large
 binary sizes. These effects are compounded by the requirements imposed by the
 manylinux standard for Linux wheels, which results in many large libraries
 being bundled into a single wheel (see [Native
-dependencies](native-dependencies) for details). This is true in particular for
+dependencies](../native-dependencies) for details). This is true in particular for
 deep learning packages because they link in
 [cuDNN](https://developer.nvidia.com/cudnn). For example, recent
 `manylinux2014` wheels for TensorFlow are 588 MB ([wheels for 2.11.0
