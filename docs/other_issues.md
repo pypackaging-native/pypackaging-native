@@ -36,6 +36,9 @@ An experimental setuptools extension,
 [wheel-axle](https://github.com/karellen/wheel-axle/), implements support for
 producing a wheel containing symlinks.
 
+**PEP 778: Supporting Symlinks in Wheels** is being drafted (May 2024), see
+[this discussion thread](https://discuss.python.org/t/pep-778-supporting-symlinks-in-wheels/53824).
+
 
 ## Dropping support for old manylinux versions is difficult
 
