@@ -46,7 +46,7 @@ library components of the CTK have been packaged as wheels and are now
 distributed on PyPI, such as
 [nvidia-cublas-cu11](https://pypi.org/project/nvidia-cublas-cu11/), although
 special care is needed to consume them due to [lack of symlinks in
-wheels](../native-dependencies/cpp_deps.md#current-state). Python wrappers around
+wheels](../../other_issues/#lack-of-support-for-symlinks-in-wheels). Python wrappers around
 CUDA runtime and driver APIs have been consolidated into CUDA Python
 ([website](https://developer.nvidia.com/cuda-python), [PyPI
 package](https://pypi.org/project/cuda-python)), but this package assumes that
