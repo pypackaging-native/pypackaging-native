@@ -154,9 +154,9 @@ bandwidth-intensive.
 The solution seems obvious: make metadata separately accessible from wheels.
 Luckily, the solution for this is currently in progress:
 
-!!! note "PEP 568 - Serve Distribution Metadata in the Simple Repository API"
+!!! note "PEP 658 - Serve Distribution Metadata in the Simple Repository API"
 
-    [PEP 568](https://peps.python.org/pep-0658/) (accepted) proposes to make the
+    [PEP 658](https://peps.python.org/pep-0658/) (accepted) proposes to make the
     metadata file in the `.dist-info` directory of a wheel separately available.
     This should solve the problems identified in this section. Support is
     [already implemented in `pip`](https://github.com/pypa/pip/pull/11111).
