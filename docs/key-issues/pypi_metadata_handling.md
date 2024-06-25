@@ -207,7 +207,7 @@ TODO
   bounds the way they currently do, as discussed in
   [this thread](https://discuss.python.org/t/requires-python-upper-limits/12663).
   Pip also needs to continue reducing the amount of excessive backtracking, and
-  use the separate metadata available soon with PEP 568 to reduce the impact of
+  use the separate metadata available soon with PEP 658 to reduce the impact of
   that backtracking. See
   [Possible ways to reduce backtracking](https://pip.pypa.io/en/latest/topics/dependency-resolution/#possible-ways-to-reduce-backtracking)
   in the Pip docs for current mitigation options available to users.
