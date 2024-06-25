@@ -102,7 +102,7 @@ using an emulator), but Python packages have not taken this into account and
 provided ways to avoid the need to run the host interpreter. For example,
 `numpy` and `pybind11` ship headers and have `get_include()` functions in their
 main namespaces to obtain the path to those headers. That is clearly a problem,
-which packages dependending on those headers have to work around (often done by
+which packages depending on those headers have to work around (often done by
 patching those packages with hardcoded paths within a cross-compilation setup).
 
 `pip` provides support for installing wheels for a different platform
