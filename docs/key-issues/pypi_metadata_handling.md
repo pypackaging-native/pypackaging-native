@@ -152,16 +152,15 @@ for example the `METADATA` or `RECORD` files, the current process is slow and
 bandwidth-intensive.
 
 The solution seems obvious: make metadata separately accessible from wheels.
-Luckily, the solution for this is currently in progress:
+Luckily, the solution for this is now available:
 
-!!! note "PEP 568 - Serve Distribution Metadata in the Simple Repository API"
+!!! note "PEP 658 - Serve Distribution Metadata in the Simple Repository API"
 
-    [PEP 568](https://peps.python.org/pep-0658/) (accepted) proposes to make the
+    [PEP 658](https://peps.python.org/pep-0658/) (accepted) proposed to make the
     metadata file in the `.dist-info` directory of a wheel separately available.
-    This should solve the problems identified in this section. Support is
-    [already implemented in `pip`](https://github.com/pypa/pip/pull/11111).
-    Implementation in PyPI is still pending, see
-    [warehouse#8254](https://github.com/pypi/warehouse/issues/8254).
+    This solves the problems identified in this section. Support is
+    [implemented in `pip`](https://github.com/pypa/pip/pull/11111), and
+    [PyPI](https://github.com/pypi/warehouse/issues/8254).
 
 There are also issues around packages who don't yet use static metadata in
 `pyproject.toml`, and reliable metadata for sdists being only relatively
@@ -208,7 +207,7 @@ TODO
   bounds the way they currently do, as discussed in
   [this thread](https://discuss.python.org/t/requires-python-upper-limits/12663).
   Pip also needs to continue reducing the amount of excessive backtracking, and
-  use the separate metadata available soon with PEP 568 to reduce the impact of
+  use the separate metadata available with PEP 658 to reduce the impact of
   that backtracking. See
   [Possible ways to reduce backtracking](https://pip.pypa.io/en/latest/topics/dependency-resolution/#possible-ways-to-reduce-backtracking)
   in the Pip docs for current mitigation options available to users.
