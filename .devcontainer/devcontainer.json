@@ -1,0 +1,53 @@
+{
+	"name": "MkDocs Material editor",
+	"image": "squidfunk/mkdocs-material:latest",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/docs,type=bind",
+	"workspaceFolder": "/docs",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.formatOnSave": true,
+				"makefile.configureOnOpen": false,
+				"terminal.integrated.shell.linux": "/bin/zsh"
+			},
+			"extensions": [
+				// Python
+				"ms-python.python",
+				// Git & Github
+				"GitHub.vscode-pull-request-github",
+				// Github Actions
+				"GitHub.vscode-github-actions",
+				// GitLens
+				"eamodio.gitlens",
+				// Makefile
+				"ms-vscode.makefile-tools",
+				// Markdown
+				"davidanson.vscode-markdownlint",
+				// YAML
+				"redhat.vscode-yaml"
+				// Add further extensions, e.g., spell checker
+				// "znck.grammarly"
+			]
+		}
+	},
+	"portsAttributes": {
+		"8888": {
+			"label": "MKDocs",
+			"onAutoForward": "openBrowserOnce"
+		}
+	},
+	"postCreateCommand": "pip install -r requirements.txt",
+	"postStartCommand": "mkdocs serve -a localhost:8888",
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"username": "pypackaging-native",
+			"installZsh": true,
+			"installOhMyZsh": true,
+			"configureZshAsDefaultShell": true,
+			"upgradePackages": false
+		},
+		"ghcr.io/devcontainers/features/git:1": {
+			"version": "latest"
+		}
+	}
+}
