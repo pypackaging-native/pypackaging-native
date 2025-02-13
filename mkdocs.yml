@@ -43,6 +43,7 @@ nav:
     - 'key-issues/simd_support.md'
     - 'key-issues/unexpected_fromsource_builds.md'
     - 'key-issues/cross_compilation.md'
+    - 'key-issues/multiple_architectures.md'
   - 'other_issues.md'
   - 'Background':
     - 'background/binary_interface.md'
