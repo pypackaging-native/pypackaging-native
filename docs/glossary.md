@@ -50,7 +50,7 @@
 | RHEL | Red Hat Enterprise Linux | Commercial distribution with some of the longest-running support timelines |
 | RISC | Reduced Instruction Set Computer | Paradigm underlying many past and current CPU architectures |
 | ROCm | Radeon Open Compute | Software stack for AMD GPUs; comparable to CUDA |
-| `sdist` | Source DISTribution | An archive of the source code of a Python project with metadata | See [here](https://setuptools.pypa.io/en/latest/deprecated/distutils/sourcedist.html) |
+| `sdist` | Source DISTribution | An archive of the source code of a Python project with metadata See [here](https://setuptools.pypa.io/en/latest/deprecated/distutils/sourcedist.html) |
 | SIMD | Single Instruction, Multiple Data | CPU-specific instructions that can process more data in a single instruction |
 | SIG | Special Interest Group | E.g., Distutils-SIG (now replaced by [Discourse](https://discuss.python.org/c/packaging/14)) |
 | SSE | Streaming SIMD Extensions | Various extensions to the x86 instruction set (SSE, SSE2, SSE3, SSSE3, SSE4) for SIMD |
@@ -59,7 +59,7 @@
 | UI | User Interface | |
 | UX | User eXperience | |
 | VCS | Version Control System | Tool to keep track of changes in source code, e.g. `git` |
-| `venv` | Virtual ENVironments | Python standard library module for creating environments; distinct from `virtualenv` | See [here](https://docs.python.org/3/library/venv.html) |
+| `venv` | Virtual ENVironments | Python standard library module for creating environments; distinct from `virtualenv` See [here](https://docs.python.org/3/library/venv.html) |
 
 ## Terms
 
