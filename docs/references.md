@@ -48,3 +48,4 @@
 - [Brian Okken - Python Packaging - Brett Cannon (2021)](https://podcasts.apple.com/in/podcast/python-packaging-brett-cannon/id1029487211?i=1000520722142)
 - [Geir Arne Hjelle - How to Publish Your Own Python Package to PyPI (2022)](https://realpython.com/pypi-publish-python-package/)
 - [Dane Hillard - Publishing Python Packages (2022)](https://www.manning.com/books/publishing-python-packages)
+- [WheelNext Initiative](https://wheelnext.dev/)
