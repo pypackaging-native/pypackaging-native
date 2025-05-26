@@ -202,10 +202,12 @@ the Packaging Discourse:
   GPU hardware and CUDA libraries being out of scope,
 - [What to do about GPUs? (and the built distributions that support them)](https://discuss.python.org/t/what-to-do-about-gpus-and-the-built-distributions-that-support-them/7125)
   on a Packaging thread on Discourse (2021),
+- [Selecting variant wheels according to a semi-static specification](https://discuss.python.org/t/selecting-variant-wheels-according-to-a-semi-static-specification/53446) thread on Discourse (2024),
+- [Implementation variants: rehashing and refocusing](https://discuss.python.org/t/implementation-variants-rehashing-and-refocusing/54884) thread on Discourse (2024).
 
-None of the suggested ideas in those threads gained traction, mostly due to a
-combination of the complexity of the problem, difficulty of implementing
-support in packaging tools, and lack of people to work on a solution.
+The ultimate thread has eventually lead into the [Wheel Variants proposal](https://wheelnext.dev/proposals/pepxxx_wheel_variant_support/)
+that is [being developed](https://github.com/wheelnext/pep_xxx_wheel_variants)
+as part of the [WheelNext initiative](https://wheelnext.dev/).
 
 
 ## Relevant resources
@@ -222,6 +224,13 @@ Potential solutions on the PyPI side include:
 - make an environment marker or selector package approach work,
 - improve interoperability with other package managers, in order to be able to
   declare a dependency on a CUDA or ROCm version as externally provided,
+
+A potential solution is the [Wheel Variants proposal](https://wheelnext.dev/proposals/pepxxx_wheel_variant_support/)
+that permits publishing multiple variants of the same wheel and selecting
+between them using a plugin-based system. For example, it makes it possible
+to publish variants built for different GPU runtimes and use plugins to select
+a variant matching the driver used on the system, or fall back to a lean
+CPU-only variant.
 
 
 ## Additional Notes on CUDA Compatibility

@@ -94,3 +94,5 @@
 | (Target) Triple | Unambiguous specification of the platform for the purpose of (cross-)compiling software for it, usually `<arch>-<vendor>-<OS>` | See [PEP 11](https://peps.python.org/pep-0011/), resp. [here](https://clang.llvm.org/docs/CrossCompilation.html#target-triple) or [here](https://gcc.gnu.org/install/specific.html) |
 | `virtualenv` | Installable module for handling virtual environments; largely a superset of `venv` | See [here](https://virtualenv.pypa.io/) |
 | Wheel | A format for distributing and installing binary artefacts for Python packages; essentially a tarball plus metadata | See [here](https://wheel.readthedocs.io/) |
+| WheelNext | The initiative to improve the wheel format, particularly around the scientific computing and machine/deep learning space | See [here](https://wheelnext.dev/) |
+| Wheel variant | A proposed extension that permits publishing multiple variants of the same package and selecting between them using a plugin-based approach | See [proto-PEP](https://wheelnext.dev/proposals/pepxxx_wheel_variant_support/) and [project repository](https://github.com/wheelnext/pep_xxx_wheel_variants) |
