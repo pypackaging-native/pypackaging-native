@@ -220,6 +220,6 @@ this route.
 This also has also been identified as potential use case for
 the [Wheel Variants proposal](https://wheelnext.dev/proposals/pepxxx_wheel_variant_support/).
 The proposal provides a more flexible framework that can be utilized
-to provide a more fine-grained control over variations of CPU architecture
+to provide more fine-grained control over variations of CPU architecture
 than wheel tags provide, build multiple variants of the same package and use
 plugins to select one that matches the detected CPU best.
