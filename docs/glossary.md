@@ -6,6 +6,8 @@
 |---|---|---|
 | ABI | Application Binary Interface | See [here](./background/binary_interface.md) |
 | API | Application Programming Interface | The sum total of available functions, classes, etc. of a given program |
+| AAB | Android Application Bundle | A distributable unit containing an Android application |
+| APK | Android application Package | A "binary" unit for Android, installed on a device |
 | ARM | Advanced RISC Machines | Family of RISC architectures, second-most widely used processor family after x86 |
 | AVX | Advanced Vector eXtensions | Various extensions to the x86 instruction set (AVX, AVX2, AVX512), evolution after SSE |
 | BLAS | Basic Linear Algebra Subprograms | Specification resp. implementation for low-level linear algebra routines |
@@ -29,6 +31,7 @@
 | LAPACK | Linear Algebra PACKage | Standard software library for numerical linear algebra |
 | ISA | Instruction Set Architecture | Specification of an instruction set for a CPU; e.g. x86-64, arm64, ... |
 | JIT | Just-in-time Compilation | Compiling code just before execution; used in CUDA, PyTorch, PyPy, Numba etc. |
+| JNI | Java Native Interface | The bridge API allowing access of Java runtime objects from native code (and vice versa) |
 | LLVM | - | Cross-platform compiler framework, home of Clang, MLIR, BOLT etc. |
 | LTO | Link-Time Optimization | See [here](./background/compilation_concepts.md#link-time-optimization-lto)|
 | LTS | Long-Term Support | Version of a given software/library/distribution designated for long-term support |
@@ -36,6 +39,7 @@
 | MPI | Message Passing Interface | Standard for message-passing in parallel computing |
 | MLIR | Multi-Level IR | Higher-level IR within LLVM; used i.a. in machine learning frameworks |
 | MSVC | Microsoft Visual C++ | Main compiler on Windows |
+| NDK | Native Development Kit | The Android toolchain supporting compilation of binary modules |
 | NEP | Numpy Enhancement Proposal | See [here](https://numpy.org/neps/) |
 | OpenMP | Open Multi Processing | Multi-platform API for enabling multi-processing in C/C++/Fortran |
 | OS | Operating System | E.g. Linux, MacOS, Windows |
